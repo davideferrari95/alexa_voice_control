@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="alexa_voice_control" type="skill_server_launcher.py" name="skill_server_node" output="screen"/>
+</launch>

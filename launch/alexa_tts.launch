@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="alexa_voice_control" type="alexa_tts.py" name="alexa_tts_node" output="screen"/>
+</launch>
