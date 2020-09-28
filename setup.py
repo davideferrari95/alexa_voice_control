@@ -24,6 +24,7 @@ os.chmod(ngrok_path + "ngrok", 0o777)
 os.chmod(script_path + "alexa_remote_control.sh", 0o777)
 os.chmod(script_path + "alexa_wrapper.sh", 0o777)
 os.chmod(script_path + "generate_ssl_cert.sh", 0o777)
+os.chmod(script_path + "setup.sh", 0o777)
 
 os.chmod(src_path + "Alexa_TTS/alexa_tts.py", 0o777)
 os.chmod(src_path + "Alexa_TTS/delete_cookies.py", 0o777)
@@ -39,5 +40,8 @@ os.system('cp ' + config_path + 'ngrok.yml ~/.ngrok2/ngrok.yml')
 # Copy secrets.yaml in ~/.config/
 # os.system('cp ' + script_path + 'secrets.yaml ~/.config/secrets.yaml')
 
-# Install dependencies for flask-ask
+# Install apt-get dependencies 
+os.system('sudo ' + script_path + 'setup.sh')
+
+# Install pip3 dependencies
 os.system('pip3 install -r ' + package_path + '/requirements.txt')

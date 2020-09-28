@@ -11,15 +11,6 @@ Package that allows communication between ros and alexa, implementing two differ
 * Python 3.6+
 * ROS Melodic+
 &nbsp; 
-* python3-catkin-pkg-modules, python3-rospkg-modules, python3-pip, sqlite3, jq
-&nbsp;
-    ``` bash
-     sudo apt-get install python3-pip
-     sudo apt-get install python3-catkin-pkg-modules
-     sudo apt-get install python3-rospkg-modules
-     sudo apt-get install sqlite3
-     sudo apt-get install jq
-    ```
 * flask-ask (Python): follow installation in the [flask-ask GitHub page](https://github.com/johnwheeler/flask-ask/blob/master/README.rst#installation).
 (the use of pip3 instead of pip is recommended)
 &nbsp;
@@ -32,7 +23,7 @@ Package that allows communication between ros and alexa, implementing two differ
 
   ``` bash
    cd catkin_ws/src
-   copy the package
+   copy the package (git clone or others)
   ```
 
 * Build catkin workspace:
