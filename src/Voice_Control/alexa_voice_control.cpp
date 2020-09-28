@@ -3,20 +3,25 @@
 
 //----------------------------------------------------- CONSTRUCTOR -----------------------------------------------------//
 
-alexa_voice_control::alexa_voice_control() {
+alexa_voice_controller::alexa_voice_controller() {
 
     //Publisher & Subscriber
 
-    intent_subscriber = nh.subscribe("/alexa/intent_number", 1, &alexa_voice_control::Intent_Callback, this);
+    intent_subscriber = nh.subscribe("/alexa/intent_number", 1, &alexa_voice_controller::Intent_Callback, this);
+    set_parameter_subscriber = nh.subscribe("/alexa/set_parameter", 1, &alexa_voice_controller::Set_Parameter_Callback, this);
+    precision_movement_subscriber = nh.subscribe("/alexa/move_robot/direction", 1, &alexa_voice_controller::Precision_Movement_Callback, this);
+    inizialization_subscriber = nh.subscribe("/alexa/alexa_tts_initialization", 1, &alexa_voice_controller::Inizialization_Callback, this);
 
     alexa_tts_publisher = nh.advertise<std_msgs::String>("/alexa/text_to_speech", 1);
 
     manipulator_trajectory_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/Robot_Bridge/prbt_Planned_Trajectory", 1000);
     mobile_base_velocity_publisher = nh.advertise<geometry_msgs::Twist>("/Robot_Bridge/mpo_500_Planned_Velocity", 1000);
 
+    alexa_tts_inizialization = false;
+
 }
 
-alexa_voice_control::~alexa_voice_control() {
+alexa_voice_controller::~alexa_voice_controller() {
 
 
 }
@@ -25,19 +30,59 @@ alexa_voice_control::~alexa_voice_control() {
 //------------------------------------------------------ CALLBACK ------------------------------------------------------//
 
 
-void alexa_voice_control::Intent_Callback (const std_msgs::Int32::ConstPtr &msg) {
+void alexa_voice_controller::Intent_Callback (const std_msgs::Int32::ConstPtr &msg) {
 
     std_msgs::Int32 intent_number = *msg;
 
-    if (intent_number.data == 1) {Algoritmo_IMA();}
-    else {std::cout << "\nIntento Sconosciuto\n";}
+    if (intent_number.data == 12) {
+        
+        //ImpostaParametroIntent -> intent_number = 12
+
+    }
+
+}
+
+
+void alexa_voice_controller::Set_Parameter_Callback (const alexa_voice_control::parameter_msg::ConstPtr &msg) {
+
+    std::string par_name = msg -> parameter_name.data;
+    float par_value = msg -> parameter_value;
+
+    if (par_name == "velocity") {
+        
+        ros::Duration(5).sleep();
+        desired_velocity = desired_velocity_QP(par_value); //[m/s]
+
+        if (desired_velocity == par_value) {speak("Velocità-impostata-a-" + float_to_string(desired_velocity,2) + "-metri-al-secondo");}
+        else {speak("La-velocità-è-stata-limitata-a-" + float_to_string(desired_velocity,2) + "-metri-al-secondo");}
+        
+    }
+}
+
+
+void alexa_voice_controller::Precision_Movement_Callback (const alexa_voice_control::movement_msg::ConstPtr &msg) {
+
+    std::string movement_direction = msg -> direction.data; //[cm]
+    float movement_lenght = msg -> lenght;
+
+    //muovi il robot
+
+    speak("Muovo-il-robot-di-" + float_to_string(movement_lenght,2) + "-verso-" + movement_direction);
+    
+}
+
+
+void alexa_voice_controller::Inizialization_Callback (const std_msgs::Bool::ConstPtr &msg) {
+
+    std_msgs::Bool temp = *msg;
+    alexa_tts_inizialization = temp.data;
 
 }
 
 
 //------------------------------------------------------ FUNCTION ------------------------------------------------------//
 
-void alexa_voice_control::speak(std::string text) {
+void alexa_voice_controller::speak(std::string text) {
 
     std_msgs::String msg;
     msg.data = text;
@@ -45,7 +90,61 @@ void alexa_voice_control::speak(std::string text) {
 
 }
 
-void alexa_voice_control::Move_MPO (float x_vel, float y_vel, float z_twist, float movement_time) {
+
+std::string alexa_voice_controller::float_to_string(float num, int decimal_precision) {
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(decimal_precision) << num;
+    std::string s = stream.str();
+    return s;
+}
+
+
+float alexa_voice_controller::desired_velocity_QP(float desired_vel) {
+
+    set_defaults();
+    setup_indexing();
+
+    //set maximum and desired velocities [m/s]
+    params.v_max[0] = 1;
+    params.v_d[0] = desired_vel;
+
+    long num_iters = solve();
+
+    return vars.v[0];
+
+}
+
+
+//-------------------------------------------------------- MAIN --------------------------------------------------------//
+
+
+void alexa_voice_controller::spinner (void) {
+
+    while (!alexa_tts_inizialization) {
+        ros::spinOnce();    
+    }
+
+    ros::Duration(2).sleep();
+    speak("Comunicazione-tra-robot-e-utente-inizializzata");
+    
+    // necessaria pausa tra i comandi
+    // ros::Duration(5).sleep();
+
+    ros::spin();
+
+}
+
+
+
+/**************************************************************************************************************************
+ *                                                                                                                        *
+ *                                                   MOVEMENT ALGORITHM                                                   *
+ *                                                                                                                        *
+ *************************************************************************************************************************/
+
+
+void alexa_voice_controller::Move_MPO (float x_vel, float y_vel, float z_twist, float movement_time) {
 
     geometry_msgs::Twist cmd_vel;
 
@@ -71,7 +170,7 @@ void alexa_voice_control::Move_MPO (float x_vel, float y_vel, float z_twist, flo
 }
 
 
-void alexa_voice_control::Move_PRBT (double joint1, double joint2, double joint3, double joint4, double joint5, double joint6, float movement_time) {
+void alexa_voice_controller::Move_PRBT (double joint1, double joint2, double joint3, double joint4, double joint5, double joint6, float movement_time) {
 
     trajectory_msgs::JointTrajectory trajectory;
     std::vector<double> final_position = {joint1, joint2, joint3, joint4, joint5, joint6};
@@ -88,10 +187,7 @@ void alexa_voice_control::Move_PRBT (double joint1, double joint2, double joint3
 }
 
 
-//------------------------------------------------- MOVEMENT ALGORITHM --------------------------------------------------//
-
-
-void alexa_voice_control::Algoritmo_IMA (void) {
+void alexa_voice_controller::Algoritmo_IMA (void) {
 
     float home[6] =  {0.08, 0.75, 2.35, 1.55, 0.00, -0.241};
 
@@ -179,7 +275,7 @@ void alexa_voice_control::Algoritmo_IMA (void) {
 
 }
 
-void alexa_voice_control::Algoritmo_PRBT (void) {
+void alexa_voice_controller::Algoritmo_PRBT (void) {
 
     float home[6] =  {0.08, 0.75, 2.35, 1.55, 0.00, -0.241};
 
@@ -268,23 +364,5 @@ void alexa_voice_control::Algoritmo_PRBT (void) {
     
     ros::Duration(2).sleep();
     speak("Ho-terminato-il-movimento,resto-in-attesa-di-un-nuovo-comando");
-
-}
-
-//-------------------------------------------------------- MAIN --------------------------------------------------------//
-
-
-void alexa_voice_control::spinner (void) {
-    
-    ros::spinOnce();
-
-    ros::Duration(5).sleep();
-    speak("Comunicazione-tra-robot-e-utente-inizializzata");
-
-    ros::spin();
-    
-    // necessaria pausa tra i comandi
-    // ros::Duration(5).sleep();
-    // speak("finalmente-ci-sono-riuscito!");
 
 }

@@ -6,13 +6,22 @@ import subprocess
 import shlex
 import time
 
-from std_msgs.msg import String, Float64
+from std_msgs.msg import String, Float64, Bool
+
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+import geckodriver_autoinstaller
+import fileinput
+import sys
 
 
 #------------------------------------------ INIZIALIZATION -------------------------------------------#
 
 rospy.init_node('alexa_tts_node')
 # r = rospy.Rate(10) # 10hz
+
+inizialization_publisher = rospy.Publisher('/alexa/alexa_tts_initialization', Bool, queue_size=100)
+# text_publisher = rospy.Publisher('alexa/text_to_speech/received', String, queue_size=100)
 
 # get script location path
 rospack = rospkg.RosPack()
@@ -24,9 +33,48 @@ script_path = package_path + "/script/alexa_remote_control.sh"
 # print("Script Path: " + script_path + "\n")
 
 
+#------------------------------------------ GET USER AGENT -------------------------------------------#
+
+print("\nGetting User Agent\n")
+
+def replaceAll(file,searchExp,replaceExp):
+    for line in fileinput.input(file, inplace=1):
+        if searchExp in line:
+            line = line.replace(searchExp,replaceExp)
+        sys.stdout.write(line)
+
+
+geckodriver_autoinstaller.install()  # Check if the current version of geckodriver exists
+                                     # and if it doesn't exist, download it automatically,
+                                     # then add geckodriver to path
+
+
+options = Options()
+options.headless = True
+options.add_argument("--window-size=1920,1200")
+
+url = "https://www.whatsmyua.info/"
+
+driver = webdriver.Firefox(options=options)
+driver.get(url)
+page_html = driver.page_source
+user = driver.find_element_by_id('rawUa').text
+user_agent_rawUa = user[7:]
+
+driver.quit()
+
+# print(user_agent_rawUa)
+
+# copy and rename "alexa_remote_control.sh.template" in alexa_remote_control.sh
+os.system("cp " + script_path + ".template " + script_path)
+
+replaceAll(script_path, "user_agent_da_sostituire_con_script", user_agent_rawUa)
+
+
 #---------------------------------------- DEVICE CONNNECTION -----------------------------------------#
 
 # launch delete_cookies script
+print("\nLaunching Delete Cookies Script\n")
 os.system('python3 ' + package_path + '/src/Alexa_TTS/delete_cookies.py')
 
 # copy ".alexa.cookie" in /tmp
@@ -42,14 +90,19 @@ print("------------------------------------------------------------")
 ''' 
 Devices list in your account:
 
+Alexa - Cucina
 Alexa - Camera
+Alexa - Taverna
 Ovunque
+Davide's alexa-client
 This Device
+Davide's Alexa Apps
 
 '''
 
 # set name of the alexa device I want to use
-device_name = "Alexa - Camera"
+#device_name = "Alexa - Camera"
+device_name = "Echo Dot di ARSCONTROL"
 
 
 '''
@@ -103,12 +156,12 @@ def text_callback(data):
 
 while not rospy.is_shutdown():
 
-    # text_publisher = rospy.Publisher('alexa/text_to_speech/received', String, queue_size=100)
-    # text_subscriber = rospy.Subscriber('alexa/text_to_speech/speak', String, text_callback)
-    text_subscriber = rospy.Subscriber('/alexa/text_to_speech', String, text_callback)
-
-    print("\nAlexa - TextToSpeech\n")
-    # text_publisher.publish("Alexa - TextToSpeech Initialized")
+	text_subscriber = rospy.Subscriber('/alexa/text_to_speech', String, text_callback)
+	
+	inizialization_publisher.publish(True)
+	
+	print("\nAlexa - TextToSpeech\n")
+	# text_publisher.publish("Alexa - TextToSpeech Initialized")
     # alexa_tts("Comunicazione-tra-robot-e-utente-inizializzata")
-
-    rospy.spin()
+	
+	rospy.spin()

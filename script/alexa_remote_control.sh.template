@@ -84,7 +84,8 @@ OPTS='-k --compressed --http1.1'
 
 # browser identity
 
-BROWSER='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
+BROWSER='user_agent_da_sostituire_con_script'
+#BROWSER='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'
 #BROWSER='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
 
 # Change your TMP for Hass.io to keep cookie between reboots

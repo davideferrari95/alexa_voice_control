@@ -5,3 +5,5 @@ pyOpenSSL==17.0.0
 PyYAML==3.12
 six==1.11.0
 Werkzeug==0.16.1
+selenium==3.141.0
+geckodriver-autoinstaller==0.1.0

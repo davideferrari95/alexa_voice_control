@@ -1,0 +1,28 @@
+# Produced by CVXGEN, 2020-09-01 12:15:41 -0400.
+# CVXGEN is Copyright (C) 2006-2017 Jacob Mattingley, jem@cvxgen.com.
+# The code in this file is Copyright (C) 2006-2017 Jacob Mattingley.
+# CVXGEN, or solvers produced by CVXGEN, cannot be used for commercial
+# applications without prior written permission from Jacob Mattingley.
+
+# Filename: description.cvxgen.
+# Description: A description of the CVXGEN problem.
+
+dimensions
+
+end
+
+parameters
+  v_d
+  v_max
+end
+
+variables
+  v
+end
+
+minimize
+  #norm_1(v-v_d)
+  quad((v-v_d))
+subject to
+  v <= v_max
+end

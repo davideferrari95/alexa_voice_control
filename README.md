@@ -75,13 +75,7 @@ the keys `alexa_email` and `alexa_password`, as in the example below:
 
 2. Disable the **Amazon's Two-Step Verification**
 
-3. Get your browser [User Agent](https://www.whatismybrowser.com/detect/what-is-my-user-agent), you obtain a string similar to the example:
-
-     ``` bash
-      Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0
-     ```
-
-4. Edit `.../script/alexa_remote_control.sh` file:
+3. Edit `.../script/alexa_remote_control.sh` file:
 
      ``` bash
       Language Settings (default is Italian):
@@ -89,8 +83,6 @@ the keys `alexa_email` and `alexa_password`, as in the example below:
           AMAZON='amazon.it' (line 65)
           ALEXA='alexa.amazon.it' (line 70)
       
-      Browser Identity:
-          BROWSER='your_user_agent' (line 87)
      ```
 
 
@@ -150,7 +142,7 @@ If there are no errors, a screen similar to this will be displayed on the termin
      * Traffic stats available on http://127.0.0.1:4040
   ```
 
-If login fails look at /tmp/.alexa.login. Search for "password" and see if you are being prompted for the captcha. If so, you can attempt to login to Alexa manually from a browser (from the same IP) and see if that fixes the issue for you. It never did for me, so I logged in to https://alexa.amazon.it with Firefox and used the [cookies.txt extension](https://addons.mozilla.org/it/firefox/addon/cookies-txt/) to export my amazon cookies.
+If login fails look at /tmp/.alexa.login. Search for "password" and see if you are being prompted for the captcha. If so, you can attempt to login to Alexa manually from a browser (from the same IP) and see if that fixes the issue for you. It never did for me, so I logged in to [https://alexa.amazon.it](https://alexa.amazon.it) with Firefox and used the [cookies.txt extension](https://addons.mozilla.org/it/firefox/addon/cookies-txt/) to export my amazon cookies.
 
 * Copy the cookies just obtained in  `.../config/.alexa.cookie`
 * Delete all Amazon cookies from your browser

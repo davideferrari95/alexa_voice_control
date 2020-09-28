@@ -10,4 +10,4 @@ os.system('sqlite3 ~/.mozilla/firefox/*.default/cookies.sqlite \\ \'delete from 
 '''Delete Amazon Cookies on Chrome'''
 os.system('sqlite3 ~/.config/google-chrome/Default/Cookies \\ \'delete from cookies where host_key LIKE "%amazon.%";\'')
 
-print("Cookies Deleted")
+print("Cookies Deleted\n")
