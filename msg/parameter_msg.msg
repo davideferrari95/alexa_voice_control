@@ -1,2 +1,0 @@
-std_msgs/String parameter_name
-float32 parameter_value

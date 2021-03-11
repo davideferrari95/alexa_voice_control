@@ -1,41 +1,33 @@
 #!/usr/bin/env python3
-import os
-import rospy
-import rospkg
-import subprocess
-import shlex
-import time
+import os, sys, subprocess
+import rospy, rospkg
+import shlex, time
 
-from std_msgs.msg import String, Float64, Bool
+from std_srvs.srv import Trigger, TriggerResponse
+from std_msgs.msg import String as String_msg
+from alexa_voice_control.srv import String as String_srv
 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-import geckodriver_autoinstaller
-import fileinput
-import sys
+# Define your Firefor profile name
+firefox_profile_name = 'y66rd0ib.default-release'
 
 
 #------------------------------------------ INIZIALIZATION -------------------------------------------#
 
 rospy.init_node('alexa_tts_node')
-# r = rospy.Rate(10) # 10hz
-
-inizialization_publisher = rospy.Publisher('/alexa/alexa_tts_initialization', Bool, queue_size=100)
-# text_publisher = rospy.Publisher('alexa/text_to_speech/received', String, queue_size=100)
 
 # get script location path
 rospack = rospkg.RosPack()
 package_path = rospack.get_path('alexa_voice_control')
 script_path = package_path + "/script/alexa_remote_control.sh"
-#script_path = "~/davide_ws/src/Speech_Recogn/Alexa_TTS/script/alexa_remote_control.sh"
-
-# print("\nPackage Path: " + package_path)
-# print("Script Path: " + script_path + "\n")
 
 
 #------------------------------------------ GET USER AGENT -------------------------------------------#
 
-print("\nGetting User Agent\n")
+print("\nGetting User Agent ...\n", end='')
+
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+import geckodriver_autoinstaller, fileinput
 
 def replaceAll(file,searchExp,replaceExp):
     for line in fileinput.input(file, inplace=1):
@@ -53,29 +45,89 @@ options = Options()
 options.headless = True
 options.add_argument("--window-size=1920,1200")
 
-url = "https://www.whatsmyua.info/"
-
 driver = webdriver.Firefox(options=options)
-driver.get(url)
+driver.get("https://www.whatsmyua.info/")
 page_html = driver.page_source
 user = driver.find_element_by_id('rawUa').text
 user_agent_rawUa = user[7:]
 
 driver.quit()
 
-# print(user_agent_rawUa)
-
 # copy and rename "alexa_remote_control.sh.template" in alexa_remote_control.sh
 os.system("cp " + script_path + ".template " + script_path)
 
+# print(user_agent_rawUa)
 replaceAll(script_path, "user_agent_da_sostituire_con_script", user_agent_rawUa)
+print("Done\n")
+
+
+#------------------------------------------ DELETE COOKIES -------------------------------------------#
+
+# print("Deleting Firefox Alexa Cookies ...")
+
+import os
+from os import path
+
+'''Delete Amazon Cookies on Firefox'''
+if (path.exists("~/.mozilla/firefox/*.default-release/cookies.sqlite")):
+    os.system('sqlite3 ~/.mozilla/firefox/*.default-release/cookies.sqlite \\ \'delete FROM moz_cookies WHERE host LIKE "%amazon.%";\'')
+    os.system('sqlite3 ~/.mozilla/firefox/*.default-release/cookies.sqlite \\ \'delete FROM moz_cookies WHERE host LIKE "%www.amazon.%";\'')
+
+if (path.exists("~/.mozilla/firefox/*.default/cookies.sqlite")):
+    os.system('sqlite3 ~/.mozilla/firefox/*.default/cookies.sqlite \\ \'delete FROM moz_cookies WHERE host LIKE "%amazon.%";\'')
+    os.system('sqlite3 ~/.mozilla/firefox/*.default/cookies.sqlite \\ \'delete FROM moz_cookies WHERE host LIKE "%www.amazon.%";\'')
+
+'''Delete Amazon Cookies on Chrome'''
+if (path.exists("~/.config/google-chrome/Default/Cookies")):
+    os.system('sqlite3 ~/.config/google-chrome/Default/Cookies \\ \'delete FROM cookies WHERE host_key LIKE "%amazon.%";\'')
+
+# print("Cookies Deleted\n")
+
+
+#----------------------------------------- GET ALEXA COOKIES -----------------------------------------#
+
+print("Getting New Alexa Cookies ...\n", end='')
+
+import http.cookiejar as cookielib
+
+def to_cookielib_cookie(selenium_cookie):
+    return cookielib.Cookie(
+        version=0,
+        name=selenium_cookie['name'],
+        value=selenium_cookie['value'],
+        port='80',
+        port_specified=False,
+        domain=selenium_cookie['domain'],
+        domain_specified=True,
+        domain_initial_dot=False,
+        path=selenium_cookie['path'],
+        path_specified=True,
+        secure=selenium_cookie['secure'],
+        expires=selenium_cookie['expiry'],
+        discard=False,
+        comment=None,
+        comment_url=None,
+        rest=None,
+        rfc2109=False
+    )
+    
+def put_cookies_in_jar(selenium_cookies, cookie_jar):
+    for cookie in selenium_cookies:
+        cookie_jar.set_cookie(to_cookielib_cookie(cookie))
+
+firefox_profile_path = '~/.mozilla/firefox/' + firefox_profile_name
+driver = webdriver.Firefox(firefox_profile=firefox_profile_path, options=options)
+driver.get("https://alexa.amazon.it")
+cookies = driver.get_cookies()
+mcj = cookielib.MozillaCookieJar()
+
+put_cookies_in_jar(cookies, mcj)
+mcj.save(package_path + "/config/" + ".alexa.cookie")
+
+print("Done\n\n", end='')
 
 
 #---------------------------------------- DEVICE CONNNECTION -----------------------------------------#
-
-# launch delete_cookies script
-print("\nLaunching Delete Cookies Script\n")
-os.system('python3 ' + package_path + '/src/Alexa_TTS/delete_cookies.py')
 
 # copy ".alexa.cookie" in /tmp
 os.system("cp " + package_path + "/config/.alexa.cookie /tmp/.alexa.cookie")
@@ -84,7 +136,6 @@ os.system("cp " + package_path + "/config/.alexa.cookie /tmp/.alexa.cookie")
 print("------------------------------------------------------------")
 subprocess.call([script_path, '-a'])
 time.sleep(1)
-# os.system(script_path + " -a")
 print("------------------------------------------------------------")
 
 ''' 
@@ -94,16 +145,15 @@ Alexa - Cucina
 Alexa - Camera
 Alexa - Taverna
 Ovunque
-Davide's alexa-client
 This Device
-Davide's Alexa Apps
-
 '''
 
-# set name of the alexa device I want to use
-#device_name = "Alexa - Camera"
-device_name = "Echo Dot di ARSCONTROL"
-
+try:
+	# get the name of the alexa device I want to use from rosparam
+	device_name = rospy.get_param("/alexa_tts_node/alexa_device_name")
+except:
+	device_name = "Echo Dot di ARSCONTROL"
+	#device_name = "Alexa - Camera"
 
 '''
 Script Usage:
@@ -136,32 +186,32 @@ Script Usage:
 
 '''
 
+#------------------------------------------- TTS FUNCTIONS -------------------------------------------#
 
-#--------------------------------------------- FUNCTIONS ---------------------------------------------#
+def tts_inizialization_callback (request):
+    return TriggerResponse(success=True, message="TTS Initialized")
 
 def alexa_tts (text = "testo-di-prova", alexa_device = "Alexa - Camera"):
-
 	default_command = " -d \"" + alexa_device + "\" -e speak:"
-	subprocess.call(shlex.split(script_path + default_command + "\"" + text + "\"")) 
-	# print(script_path + default_command + "\"" + text + "\"")
-	# os.system(script_path + default_command + "\"" + text + "\"")
+	subprocess.call(shlex.split(script_path + default_command + "\"" + text + "\""))
 
+def text_to_speech_callback (req):
+	rospy.loginfo("TTS Message: %s", req.message_data)
+	alexa_tts(req.message_data, device_name)
+	return True
 
-def text_callback(data):
-    rospy.loginfo("TTS Message: %s",data.data)
+def tts_callback (data):
+    rospy.loginfo("TTS Message: %s", data.data)
     alexa_tts(data.data, device_name)
-
 
 #----------------------------------------------- MAIN ------------------------------------------------#
 
 while not rospy.is_shutdown():
+    
+    text_to_speech_server = rospy.Service('/alexa/text_to_speech', String_srv, text_to_speech_callback)
+    tts_inizialization_server = rospy.Service('/alexa/alexa_tts_initialization', Trigger, tts_inizialization_callback)
+    rospy.Subscriber('/alexa/tts', String_msg, tts_callback)
 
-	text_subscriber = rospy.Subscriber('/alexa/text_to_speech', String, text_callback)
+    print("\nAlexa - TextToSpeech\n")
 	
-	inizialization_publisher.publish(True)
-	
-	print("\nAlexa - TextToSpeech\n")
-	# text_publisher.publish("Alexa - TextToSpeech Initialized")
-    # alexa_tts("Comunicazione-tra-robot-e-utente-inizializzata")
-	
-	rospy.spin()
+    rospy.spin()

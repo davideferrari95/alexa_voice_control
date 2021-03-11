@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
-import os
-import rospy
-import threading
-import requests
-import time
-import rospkg
-import time
+import os, rospy
+import time, threading
 
 from flask import Flask
 from flask_ngrok import run_with_ngrok
 from flask_ask import Ask, question, statement, session
-from std_msgs.msg import String, Float64, Int32
-from alexa_voice_control.msg import parameter_msg, movement_msg
+from std_msgs.msg import String
+
+# Cache Destructor
+import signal, sys, shutil, rospkg
+def signal_handler(sig, frame):
+    rospack = rospkg.RosPack()
+    package_path = rospack.get_path('alexa_voice_control')
+    dirpath = package_path + '/src/Skill_Server/__pycache__'
+    shutil.rmtree(dirpath, True)
+    print('\nCache Deleted\n')
+    sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
 
 
 #---------------------------------------------- FLASK & ROS INIZIALIZATION ---------------------------------------------#
@@ -24,173 +29,50 @@ NGROK = True
 # The parameter *disable_signals* must be set if node is not initialized in the main thread.
 threading.Thread(target=lambda: rospy.init_node('alexa_skill_server', disable_signals=True)).start()
 
-intent_number_publisher = rospy.Publisher('/alexa/intent_number', Int32, queue_size=100)
+intent_publisher = rospy.Publisher('/alexa/intents', String, queue_size=1)
 
-function_publisher = rospy.Publisher('/alexa/function_request', Int32, queue_size=100)
-# nome_funzione + comando (avvio, stop,pausa...)
 
-direction_publisher = rospy.Publisher('/alexa/move_robot/direction', movement_msg, queue_size=100)
-position_publisher = rospy.Publisher('/alexa/move_robot/position', String, queue_size=100)
-parameter_publisher = rospy.Publisher('/alexa/set_parameter', parameter_msg, queue_size=100)
-
+#----------------------------------------------------- MAIN INTENTS ----------------------------------------------------#
 
 @app.route("/")
 def homepage():
     return "Server Alexa-ROS"
 
-
-#----------------------------------------------------- MAIN INTENTS ----------------------------------------------------#
-
-# LaunchIntent -> Avvio dell'applicazione: "Apri nodo ros"
+# LaunchIntent: "Open ros control"
 @ask.launch
 def launch():
-    welcome_message = 'Benvenuto nel nodo di controllo ROS. Come posso aiutarti?'
-    welcome_reprompt_message = 'Come posso aiutarti?'
+    welcome_message = 'Welcome to the ROS Control node. How can I help you?'
+    welcome_reprompt_message = 'How can I help you?'
     return question(welcome_message).reprompt(welcome_reprompt_message)
 
 @ask.intent('AMAZON.StopIntent')
 def AmazonStop():
-    return statement('Arrivederci')
+    return statement('Goodbye')
 
 @ask.intent('AMAZON.HelpIntent')
 def AmazonHelp():
-    return question('Le funzioni disponibili sono pulizia e prelievo')
+    return question('')
 
-# StopIntent -> Uscita dall'applicazione: "Stop / Esci..."
+# StopIntent: "Stop"
 @ask.session_ended
 def session_ended():
     return "{}", 200
 
-@ask.intent('StandbyIntent')
-def Standby():
-    return statement('Standby confermato')
 
-''' 
-# MuoviRobotIntent: "Muovi il robot"
-@ask.intent('MuoviRobotIntent', default={'direzione':None, 'lunghezza':None})
-def move_robot_function(direzione, lunghezza):
-    direction_publisher.publish(direzione)
-    length_publisher.publish(float(lunghezza))
-    return statement('Ho pubblicato direzione e lunghezza sul topic ROS: {0} di {1} metri.'.format(direzione, lunghezza)) 
-'''
+#--------------------------------------------------- CUSTOM INTENTS ----------------------------------------------------#
 
-#--------------------------------------------------- FUNCTION INTENTS --------------------------------------------------#
+@ask.intent('StartIntent')
+def StartTask():
+    intent_name = 'Start'
+    intent_publisher.publish(intent_name)
+    return statement('Ok, I\'ll Start.')
 
-funzione_in_esecuzione = 'nessuna funzione in esecuzione'
-funzione_in_pausa = 'nessuna funzione in pausa'
-funzione_annullata = 'nessuna funzione annullata'
-#callback funzione terminata?
-#callback funzione annullata?
+@ask.intent('CustomIntent', default={'custom_variable':None})
+def IniziaFunzione(custom_variable):
+    intent_name = 'CustomIntent'
+    intent_publisher.publish(intent_name)
+    return question('Custom variable value is {0}'.format(custom_variable))
 
-# IniziaFunzioneIntent: "Inizia la Funzione"
-@ask.intent('IniziaFunzioneIntent', default={'funzione':None})
-def IniziaFunzione(funzione):
-    global funzione_in_esecuzione
-    intent_number = 1
-    intent_number_publisher.publish(int(intent_number))
-
-    if funzione == 'prelievo':
-        function_publisher.publish(1)
-        funzione_in_esecuzione = 'prelievo'
-        return question('Inizio il {0}'.format(funzione_in_esecuzione)) 
-    elif funzione == 'pulizia':
-        function_publisher.publish(2)
-        funzione_in_esecuzione = 'pulizia'
-        return question('Inizio la funzione di {0}'.format(funzione_in_esecuzione)) 
-    else:
-        return question('La funzione {0} non è disponibile'.format(funzione))
-
-
-# StopFunzioneIntent: "Ferma la Funzione"
-@ask.intent('StopFunzioneIntent')
-def FermaFunzione():
-    global funzione_in_esecuzione
-    if funzione_in_esecuzione != 'nessuna funzione in esecuzione':
-        intent_number = 2
-        intent_number_publisher.publish(int(intent_number))
-        return question('Ho interrotto la funzione {0}'.format(funzione_in_esecuzione))
-    else:
-        return question('Nessuna funzione in esecuzione')
-
-# PausaFunzioneIntent: "Pausa la Funzione"
-@ask.intent('PausaFunzioneIntent')
-def PausaFunzione():
-    global funzione_in_esecuzione
-    global funzione_in_pausa
-    if funzione_in_esecuzione != 'nessuna funzione in esecuzione':
-        intent_number = 3
-        intent_number_publisher.publish(int(intent_number))
-        funzione_in_pausa = funzione_in_esecuzione
-        return question('Ho messo in pausa la funzione {0}'.format(funzione_in_pausa))
-    else:
-        return question('Nessuna funzione in esecuzione')
-
-# RiprendiFunzioneIntent: "Riprendi la Funzione"
-@ask.intent('RiprendiFunzioneIntent')
-def RiprendiFunzione():
-    global funzione_in_pausa
-    if funzione_in_pausa != 'nessuna funzione in pausa':
-        intent_number = 4
-        intent_number_publisher.publish(int(intent_number))
-        f = funzione_in_pausa
-        funzione_in_pausa = 'nessuna funzione in pausa'
-        return question('Ho ripreso la funzione {0}'.format(f))
-    else:
-        return question('Nessuna funzione in pausa')
-
-# RiprovaFunzioneIntent: "Riprova la Funzione"
-@ask.intent('RiprovaFunzioneIntent')
-def RiprovaFunzione():
-    global funzione_annullata
-    if funzione_annullata != 'nessuna funzione annullata':
-        intent_number = 5
-        intent_number_publisher.publish(int(intent_number))
-        f = funzione_annullata
-        funzione_annullata = 'nessuna funzione annullata'
-        return question('Riprovo la funzione {0}'.format(f))
-    else:
-        return question('Nessuna funzione annullata')
-
-
-#------------------------------------------------ ROBOT MOVEMENT INTENTS -----------------------------------------------#
-
-
-@ask.intent('SpostaRobotIntent', default={'lunghezza':None, 'direzione':None})
-def SpostaRobot(lunghezza,direzione):
-    intent_number = 10
-    intent_number_publisher.publish(int(intent_number))
-    move = movement_msg()
-    move.direction.data = direzione
-    move.lenght = float(lunghezza)
-    direction_publisher.publish(move)
-    return question('Ho mosso il robot di {0} centimetri verso {1}'.format(lunghezza,direzione))
-
-@ask.intent('MoveToPositionIntent', default={'posizione':None})
-def MoveToPosition(posizione):
-    intent_number = 11
-    intent_number_publisher.publish(int(intent_number))
-    position_publisher.publish(posizione)
-    return question('Inizio il movimento verso la posizione {0}'.format(posizione))
-
-@ask.intent('ImpostaParametroIntent', default={'parametro':None, 'valore':None})
-def ImpostaParametro(parametro, valore):
-    intent_number = 12
-    intent_number_publisher.publish(int(intent_number))
-
-    par = parameter_msg()
-    par.parameter_value = float(valore)
-    if parametro == "velocità":
-        par.parameter_name.data = "velocity" 
-    parameter_publisher.publish(par)
-    return statement('Invio la richiesta')
-
-@ask.intent('AskInformationIntent', default={'parametro':None})
-def AskInformation(parametro):
-    intent_number = 13
-    intent_number_publisher.publish(int(intent_number))
-    parameter_publisher.publish(parametro)
-    valore = 'valore di prova'  # get parameter value (request-response)
-    return question('Il valore di {0} è {1}'.format(parametro,valore))
 
 #-------------------------------------------------- NGROK HTTP TUNNEL --------------------------------------------------#
 

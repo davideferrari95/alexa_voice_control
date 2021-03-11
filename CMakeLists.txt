@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  std_srvs
   message_generation
 )
 
@@ -15,10 +16,15 @@ find_package(catkin REQUIRED COMPONENTS
 ## Declare ROS messages, services and actions ##
 ################################################
 
-add_message_files(
+# add_message_files(
+#   FILES
+#   parameter_msg.msg
+# 	movement_msg.msg
+# )
+
+add_service_files(
   FILES
-  parameter_msg.msg
-	movement_msg.msg
+  String.srv
 )
 
 generate_messages(
@@ -27,25 +33,15 @@ generate_messages(
   ${PROJECT_NAME}
 )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
-
 ###################################
 ## catkin specific configuration ##
 ###################################
 
 catkin_package(
   INCLUDE_DIRS 
-		include
-		lib
-	LIBRARIES 
-		desired_velocity_qp
-	CATKIN_DEPENDS
-		message_runtime
+	include
+  CATKIN_DEPENDS
+	message_runtime
 )
 
 ###########
@@ -54,16 +50,7 @@ catkin_package(
 
 include_directories(
 	include
-	lib
   ${catkin_INCLUDE_DIRS}
-)
-
-add_library(desired_velocity_qp
-	lib/desired_velocity_qp/ldl.c
-	lib/desired_velocity_qp/solver.c
-	lib/desired_velocity_qp/matrix_support.c
-	lib/desired_velocity_qp/testsolver.c
-	lib/desired_velocity_qp/util.c
 )
 
 add_executable(alexa_voice_control_Node 
@@ -71,20 +58,17 @@ add_executable(alexa_voice_control_Node
 	src/Voice_Control/alexa_voice_control.cpp)
 add_dependencies(alexa_voice_control_Node ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
-target_link_libraries(alexa_voice_control_Node 
-	${catkin_LIBRARIES}
-	desired_velocity_qp
-)
+target_link_libraries(alexa_voice_control_Node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
 #############
 
-install(PROGRAMS 
-
-	src/Alexa_TTS/alexa_tts.py 
+install(
+  PROGRAMS
+	src/Alexa_TTS/alexa_tts.py
+	src/Skill_Server/flask_ngrok.py
 	src/Skill_Server/skill_server.py
-	src/Skill_Server/skill_server_launcher.py
-		
-  DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION}
+  DESTINATION
+  	${CATKIN_PACKAGE_PYTHON_DESTINATION}
 )

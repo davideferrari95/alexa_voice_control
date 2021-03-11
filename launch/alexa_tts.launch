@@ -1,3 +1,9 @@
 <launch>
-  <node pkg="alexa_voice_control" type="alexa_tts.py" name="alexa_tts_node" output="screen"/>
+  
+  <arg name="alexa_device_name" default="Echo Dot di USERNAME"/>
+
+  <node pkg="alexa_voice_control" type="alexa_tts.py" name="alexa_tts_node" output="screen">
+    <param name="alexa_device_name" value="$(arg alexa_device_name)"/>
+  </node>
+
 </launch>

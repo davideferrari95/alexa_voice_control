@@ -60,8 +60,8 @@ def _run_ngrok(port):
 
 def start_ngrok(port):
     ngrok_address = _run_ngrok(port)
-    ngrok_address_https = ngrok_address
     ngrok_address_http = ngrok_address.replace("https", "http")
+    ngrok_address_https = ngrok_address_http.replace("http", "https")
     print("\n * Running on " + ngrok_address_http)
     print(" * Running on " + ngrok_address_https)
     print("\n * Traffic stats available on http://127.0.0.1:4040\n")
