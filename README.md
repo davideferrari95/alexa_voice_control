@@ -4,7 +4,7 @@ Package that allows communication between ros and alexa, implementing two differ
 
 - User  →  ROS:  through a custom Alexa Skill that communicates with a local server.
 - ROS   →  User: using unsolicited Text-To-Speech  from package [ha-alexa-tts](https://github.com/walthowd/ha-alexa-tts)
- 
+
 ## Requirements
 
 * Ubuntu 18.04+
@@ -45,7 +45,14 @@ In order for the Alexa requests to reach the local skill server, the local netwo
 
 1. Create a ngrok account and get your personal authtoken in [Getting Started](https://dashboard.ngrok.com/get-started/setup)
 
-2. Edit the ngrok configuration file `.../config/ngrok.yml` by entering your authcode and region, as in the example below:
+2. Set your authtoken (example daeIDBVp5SC8DE80uwrACm...) to ngrok:
+ 
+     ``` bash
+      cd .../alexa_voice_control/ngrok
+      ./ngrok authtoken daeIDBVp5SC8DE80uwrACm...
+     ```
+
+3. Edit the ngrok configuration file `.../config/ngrok.yml` by entering your authcode and region, as in the example below:
 
      ``` bash
       authtoken: daeIDBVp5SC8DE80uwrACm...
@@ -66,7 +73,7 @@ the keys `alexa_email` and `alexa_password`, as in the example below:
 
 2. Disable the **Amazon's Two-Step Verification**
 
-3. Edit `.../script/alexa_remote_control.sh` file:
+3. Edit `.../script/alexa_remote_control.sh.template` file and set the desired language:
 
      ``` bash
       Language Settings (default is Italian):
@@ -75,7 +82,6 @@ the keys `alexa_email` and `alexa_password`, as in the example below:
           ALEXA='alexa.amazon.it' (line 70)
       
      ```
-
 
 
 ### Scripts Execution Configuration 

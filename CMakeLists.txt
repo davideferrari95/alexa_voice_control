@@ -57,7 +57,6 @@ add_executable(alexa_voice_control_Node
 	src/Voice_Control/alexa_voice_control_Node.cpp 
 	src/Voice_Control/alexa_voice_control.cpp)
 add_dependencies(alexa_voice_control_Node ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
-
 target_link_libraries(alexa_voice_control_Node ${catkin_LIBRARIES})
 
 #############

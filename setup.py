@@ -21,17 +21,14 @@ print("ngrok Path: " + ngrok_path + "\n")
 # Set Permission to Executables
 os.chmod(ngrok_path + "ngrok", 0o777)
 
-os.chmod(script_path + "alexa_remote_control.sh", 0o777)
+os.chmod(script_path + "alexa_remote_control.sh.template", 0o777)
 os.chmod(script_path + "alexa_wrapper.sh", 0o777)
 os.chmod(script_path + "generate_ssl_cert.sh", 0o777)
 os.chmod(script_path + "setup.sh", 0o777)
 
 os.chmod(src_path + "Alexa_TTS/alexa_tts.py", 0o777)
-os.chmod(src_path + "Alexa_TTS/delete_cookies.py", 0o777)
 os.chmod(src_path + "Skill_Server/flask_ngrok.py", 0o777)
 os.chmod(src_path + "Skill_Server/skill_server.py", 0o777)
-os.chmod(src_path + "Skill_Server/skill_server_launcher.py", 0o777)
-
 
 # Create ngrok configuration files
 os.system('mkdir ~/.ngrok2/')

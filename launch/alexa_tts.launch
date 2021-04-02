@@ -1,9 +1,11 @@
 <launch>
   
   <arg name="alexa_device_name" default="Echo Dot di USERNAME"/>
+  <arg name="firefox_config_file" default="$(find alexa_voice_control)/config/firefox.yaml"/>
 
   <node pkg="alexa_voice_control" type="alexa_tts.py" name="alexa_tts_node" output="screen">
     <param name="alexa_device_name" value="$(arg alexa_device_name)"/>
+    <rosparam file="$(arg firefox_config_file)" command="load"/>
   </node>
 
 </launch>

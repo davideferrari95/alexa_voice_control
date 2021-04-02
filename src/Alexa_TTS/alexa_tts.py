@@ -7,9 +7,6 @@ from std_srvs.srv import Trigger, TriggerResponse
 from std_msgs.msg import String as String_msg
 from alexa_voice_control.srv import String as String_srv
 
-# Define your Firefor profile name
-firefox_profile_name = 'y66rd0ib.default-release'
-
 
 #------------------------------------------ INIZIALIZATION -------------------------------------------#
 
@@ -115,7 +112,8 @@ def put_cookies_in_jar(selenium_cookies, cookie_jar):
     for cookie in selenium_cookies:
         cookie_jar.set_cookie(to_cookielib_cookie(cookie))
 
-firefox_profile_path = '~/.mozilla/firefox/' + firefox_profile_name
+# Load your Firefor profile name from ROS Parameter
+firefox_profile_path = rospy.get_param("/alexa_tts_node/firefox_profile")
 driver = webdriver.Firefox(firefox_profile=firefox_profile_path, options=options)
 driver.get("https://alexa.amazon.it")
 cookies = driver.get_cookies()

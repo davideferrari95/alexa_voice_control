@@ -8,3 +8,5 @@ Werkzeug==0.16.1
 selenium==3.141.0
 geckodriver-autoinstaller==0.1.0
 cookiejar
+flask-ask
+flask-ngrok
