@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-import os
+import os, subprocess
+from subprocess import STDOUT
+
+proc = subprocess.Popen('sudo apt-get install -y python3-pip python3-catkin-pkg-modules python3-rospkg-modules sqlite3 jq', 
+                        shell=True, stdin=None, stdout=open(os.devnull,"wb"), stderr=STDOUT, executable="/bin/bash")
+proc.wait()
+
 import rospkg
 
 # Get script location path
@@ -24,7 +30,6 @@ os.chmod(ngrok_path + "ngrok", 0o777)
 os.chmod(script_path + "alexa_remote_control.sh.template", 0o777)
 os.chmod(script_path + "alexa_wrapper.sh", 0o777)
 os.chmod(script_path + "generate_ssl_cert.sh", 0o777)
-os.chmod(script_path + "setup.sh", 0o777)
 
 os.chmod(src_path + "Alexa_TTS/alexa_tts.py", 0o777)
 os.chmod(src_path + "Skill_Server/flask_ngrok.py", 0o777)
@@ -36,9 +41,6 @@ os.system('cp ' + config_path + 'ngrok.yml ~/.ngrok2/ngrok.yml')
 
 # Copy secrets.yaml in ~/.config/
 # os.system('cp ' + script_path + 'secrets.yaml ~/.config/secrets.yaml')
-
-# Install apt-get dependencies 
-os.system('sudo ' + script_path + 'setup.sh')
 
 # Install pip3 dependencies
 os.system('pip3 install -r ' + package_path + '/requirements.txt')
