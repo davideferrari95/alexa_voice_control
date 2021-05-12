@@ -105,14 +105,14 @@ To end the setup you need to run the `setup.py` script, which will apply the con
 * Use `roslaunch` to start `voice_control`:
 
   ``` bash
-   roslaunch roslaunch alexa_voice_control voice_control.launch
+   roslaunch alexa_voice_control voice_control.launch
   ```
 
 * Or you can use `roslaunch` to launch individually `alexa_tts` and `skill_server`:
 
   ``` bash
-   roslaunch roslaunch alexa_voice_control alexa_tts.launch
-   roslaunch roslaunch alexa_voice_control skill_server.launch
+   roslaunch alexa_voice_control alexa_tts.launch
+   roslaunch alexa_voice_control skill_server.launch
   ```
   
 If there are no errors, a screen similar to this will be displayed on the terminal:
