@@ -21,22 +21,22 @@ Package that allows communication between ros and alexa, implementing two differ
 
 * Navigate to source directory of your ROS catkin workspace (e.g. `catkin_ws`):
 
-  ``` bash
-   cd catkin_ws/src
-   copy the package (git clone or others)
+  ```
+  cd catkin_ws/src
+  copy the package (git clone or others)
   ```
 
 * Build catkin workspace:
 
-  ``` bash
-   cd catkin_ws
-   catkin_make
+  ```
+  cd catkin_ws
+  catkin_make
   ```
   
 * Source workspace:
 
-  ``` bash
-   source catkin_ws/devel/setup.bash
+  ```
+  source catkin_ws/devel/setup.bash
   ```
 
 ### HTTPS-Tunnel Configuration (using ngrok)
@@ -47,16 +47,16 @@ In order for the Alexa requests to reach the local skill server, the local netwo
 
 2. Set your authtoken (example daeIDBVp5SC8DE80uwrACm...) to ngrok:
  
-     ``` bash
-      cd .../alexa_voice_control/ngrok
-      ./ngrok authtoken daeIDBVp5SC8DE80uwrACm...
+     ```
+    cd .../alexa_voice_control/ngrok
+    ./ngrok authtoken daeIDBVp5SC8DE80uwrACm...
      ```
 
 3. Edit the ngrok configuration file `.../config/ngrok.yml` by entering your authcode and region, as in the example below:
 
-     ``` bash
-      authtoken: daeIDBVp5SC8DE80uwrACm...
-      region: eu
+     ```
+    authtoken: daeIDBVp5SC8DE80uwrACm...
+    region: eu
      ```
 
 ### Text-To-Speech Configuration (using [ha-alexa-tts](https://github.com/walthowd/ha-alexa-tts))
@@ -66,23 +66,33 @@ This script does work by using the Alexa web interface, so it may break at anyti
 1. Add your login credentials to the `.../script/secrets.yaml` file, with
 the keys `alexa_email` and `alexa_password`, as in the example below:
 
-     ``` bash
-      alexa_email: email@example.it
-      alexa_password: password
+     ```
+    alexa_email: email@example.it
+    alexa_password: password
      ```
 
-2. Disable the **Amazon's Two-Step Verification**
+1. Disable the **Amazon's Two-Step Verification**
 
-3. Edit `.../script/alexa_remote_control.sh.template` file and set the desired language:
+2. Edit `.../script/alexa_remote_control.sh.template` file and set the desired language:
 
-     ``` bash
-      Language Settings (default is Italian):
-          LANGUAGE="it-IT" (line 60)
-          AMAZON='amazon.it' (line 65)
-          ALEXA='alexa.amazon.it' (line 70)
-      
+     ```
+    Language Settings (default is Italian):
+        LANGUAGE="it-IT" (line 60)
+        AMAZON='amazon.it' (line 65)
+        ALEXA='alexa.amazon.it' (line 70)
      ```
 
+3. Edit `.../config/firefox.yaml` file and set your firefox profile directory. You can find the folder inside the path `/home/user/.mozilla/firefox/` (in this example the directory is `y66rd0ib.default-release`):
+
+    ```
+    firefox_profile: '/home/user/.mozilla/firefox/y66rd0ib.default-release'
+    ```
+
+4. Change the default name of the Echo Device in the `alexa_tts.launch` launchfile:
+
+    ```
+    <arg name="alexa_device_name" default="Echo Dot di USERNAME"/>
+    ```
 
 ### Scripts Execution Configuration 
 
@@ -90,59 +100,63 @@ To end the setup you need to run the `setup.py` script, which will apply the con
 
 * Set script file permissions to executable:
 
-  ``` bash
-   chmod +x .../catkin_ws/src/alexa_voice_control/setup.py
+  ```
+  chmod +x .../catkin_ws/src/alexa_voice_control/setup.py
   ```
   
 * Execute the script:
 
-  ``` bash
-   python3 .../catkin_ws/src/alexa_voice_control/setup.py
+  ```
+  python3 .../catkin_ws/src/alexa_voice_control/setup.py
   ```
 
 ## Launch Instruction
 
 * Use `roslaunch` to start `voice_control`:
 
-  ``` bash
-   roslaunch alexa_voice_control voice_control.launch
+  ```
+  roslaunch alexa_voice_control voice_control.launch
   ```
 
 * Or you can use `roslaunch` to launch individually `alexa_tts` and `skill_server`:
 
-  ``` bash
-   roslaunch alexa_voice_control alexa_tts.launch
-   roslaunch alexa_voice_control skill_server.launch
+  ```
+  roslaunch alexa_voice_control alexa_tts.launch
+  roslaunch alexa_voice_control skill_server.launch
   ```
   
 If there are no errors, a screen similar to this will be displayed on the terminal:
 
-  ``` bash
-    ------------------------------------------------------------
-    the following devices exist in your account:
-    Alexa - Camera
-    Ovunque
-    This Device
-    ------------------------------------------------------------
-    
-    Alexa - TextToSpeech
+  ```
+  ------------------------------------------------------------
+  the following devices exist in your account:
+  Echo Dot di Username
+  Ovunque
+  This Device
+  ------------------------------------------------------------
+  
+  Alexa - TextToSpeech
 
-    [INFO] [1595548174.476735]: TTS Message: Comunicazione-tra-robot-e-utente-inizializzata
-    sending cmd:speak:Comunicazione-tra-robot-e-utente-inizializzata to dev:Alexa - Camera type:A32*********** serial:G09************* customerid:AQX**********
-    Sequence command: Alexa.Speak
-    
-    NGROK mode
-    
-     * Running on http://6a6a410be6e8.eu.ngrok.io
-     * Running on https://6a6a410be6e8.eu.ngrok.io
-    
-     * Traffic stats available on http://127.0.0.1:4040
+  [INFO] [1595548174.476735]: TTS Message: Alexa-TTS-Communication-Initialized
+  sending cmd:speak:Alexa-TTS-Communication-Initialized to dev:Echo Dot di Username type:A32*********** serial:G09************* customerid:AQX**********
+  Sequence command: Alexa.Speak
+  
+  NGROK mode
+  
+    * Running on http://6a6a410be6e8.eu.ngrok.io
+    * Running on https://6a6a410be6e8.eu.ngrok.io
+  
+    * Traffic stats available on http://127.0.0.1:4040
   ```
 
-If login fails look at /tmp/.alexa.login. Search for "password" and see if you are being prompted for the captcha. If so, you can attempt to login to Alexa manually from a browser (from the same IP) and see if that fixes the issue for you. It never did for me, so I logged in to [https://alexa.amazon.it](https://alexa.amazon.it) with Firefox and used the [cookies.txt extension](https://addons.mozilla.org/it/firefox/addon/cookies-txt/) to export my amazon cookies.
+If login fails look at /tmp/.alexa.login. Search for "password" and see if you are being prompted for the captcha. If so, you can attempt to login to Alexa manually from a browser (from the same IP) and see if that fixes the issue for you. It never did for me, so I logged in to [https://alexa.amazon.it](https://alexa.amazon.it) with Firefox and used the [cookies.txt extension](https://addons.mozilla.org/it/firefox/addon/cookies-txt/) to export my amazon cookies. 
 
 * Copy the cookies just obtained in  `.../config/.alexa.cookie`
 * Delete all Amazon cookies from your browser
+
+The export cookies extension is a manual mode so you need to disable the automatic cookies function inside the alexa_TTS script. 
+
+* Disable the automatic cookies function in TTS scrips by setting `False` the flag `auto_get_cookies` in `alexa_TTS.launch` launchfile (set back to `True` to use the automatic mode)
 
 ### Endpoint Configuration (Alexa Skill)
 
@@ -154,8 +168,8 @@ To establish communication between the alexa skill and the local flask server it
 
 * Paste the ngrok URL shown on the terminal (see above) in the `Default Region` box:
 
-  ``` bash
-   Default Region   https://6a6a410be6e8.eu.ngrok.io
+  ```
+  Default Region   https://6a6a410be6e8.eu.ngrok.io
   ```
 
 * Under `SSL Certificate` select "*My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority.*"

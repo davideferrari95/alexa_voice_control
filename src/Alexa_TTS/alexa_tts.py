@@ -83,46 +83,55 @@ if (path.exists("~/.config/google-chrome/Default/Cookies")):
 
 #----------------------------------------- GET ALEXA COOKIES -----------------------------------------#
 
-print("Getting New Alexa Cookies ...\n", end='')
 
-import http.cookiejar as cookielib
+try:
+	# get the value of automatic get coockies variable from rosparam
+	auto_get_cookies = rospy.get_param("/alexa_tts_node/auto_get_cookies")
+except:
+    auto_get_cookies = False
 
-def to_cookielib_cookie(selenium_cookie):
-    return cookielib.Cookie(
-        version=0,
-        name=selenium_cookie['name'],
-        value=selenium_cookie['value'],
-        port='80',
-        port_specified=False,
-        domain=selenium_cookie['domain'],
-        domain_specified=True,
-        domain_initial_dot=False,
-        path=selenium_cookie['path'],
-        path_specified=True,
-        secure=selenium_cookie['secure'],
-        expires=selenium_cookie['expiry'],
-        discard=False,
-        comment=None,
-        comment_url=None,
-        rest=None,
-        rfc2109=False
-    )
-    
-def put_cookies_in_jar(selenium_cookies, cookie_jar):
-    for cookie in selenium_cookies:
-        cookie_jar.set_cookie(to_cookielib_cookie(cookie))
+if (auto_get_cookies):
+        
+    print("Getting New Alexa Cookies ...\n", end='')
 
-# Load your Firefor profile name from ROS Parameter
-firefox_profile_path = rospy.get_param("/alexa_tts_node/firefox_profile")
-driver = webdriver.Firefox(firefox_profile=firefox_profile_path, options=options)
-driver.get("https://alexa.amazon.it")
-cookies = driver.get_cookies()
-mcj = cookielib.MozillaCookieJar()
+    import http.cookiejar as cookielib
 
-put_cookies_in_jar(cookies, mcj)
-mcj.save(package_path + "/config/" + ".alexa.cookie")
+    def to_cookielib_cookie(selenium_cookie):
+        return cookielib.Cookie(
+            version=0,
+            name=selenium_cookie['name'],
+            value=selenium_cookie['value'],
+            port='80',
+            port_specified=False,
+            domain=selenium_cookie['domain'],
+            domain_specified=True,
+            domain_initial_dot=False,
+            path=selenium_cookie['path'],
+            path_specified=True,
+            secure=selenium_cookie['secure'],
+            expires=selenium_cookie['expiry'],
+            discard=False,
+            comment=None,
+            comment_url=None,
+            rest=None,
+            rfc2109=False
+        )
+        
+    def put_cookies_in_jar(selenium_cookies, cookie_jar):
+        for cookie in selenium_cookies:
+            cookie_jar.set_cookie(to_cookielib_cookie(cookie))
 
-print("Done\n\n", end='')
+    # Load your Firefor profile name from ROS Parameter
+    firefox_profile_path = rospy.get_param("/alexa_tts_node/firefox_profile")
+    driver = webdriver.Firefox(firefox_profile=firefox_profile_path, options=options)
+    driver.get("https://alexa.amazon.it")
+    cookies = driver.get_cookies()
+    mcj = cookielib.MozillaCookieJar()
+
+    put_cookies_in_jar(cookies, mcj)
+    mcj.save(package_path + "/config/" + ".alexa.cookie")
+
+    print("Done\n\n", end='')
 
 
 #---------------------------------------- DEVICE CONNNECTION -----------------------------------------#
