@@ -1,7 +1,11 @@
 <launch>
 
+	<!-- Launch ROS-Bridge WebSocket -->
 	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
 	        <arg name="port" value="9091"/>
 	</include>
+
+	<!-- Launch Alexa Skill Back-End -->
 	<node pkg="alexa_voice_control" type="skill.py" name="skill_node" output="screen"/>
+
 </launch>

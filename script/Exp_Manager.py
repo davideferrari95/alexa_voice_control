@@ -1,18 +1,11 @@
 #!/usr/bin/env python3
-from operator import truediv
 import rospy
 from std_msgs.msg import String,Bool, Int32MultiArray
-from geometry_msgs.msg import Pose
-#from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectoryPoint
 from ur_rtde_controller.msg import CartesianPoint
 from ur_rtde_controller.srv import RobotiQGripperControl, RobotiQGripperControlRequest
 from ur_rtde_controller.srv import GetForwardKinematic, GetForwardKinematicRequest
-import numpy as np
-# import subprocess
 import time
-# import os
-
 
 """
 

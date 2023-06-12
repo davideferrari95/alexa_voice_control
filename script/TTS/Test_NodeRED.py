@@ -23,7 +23,7 @@ def main():
 
     if msg:
         print(msg.data)
-        tts="Mannacc a quella grannd cess e mammet"
+        tts="test"
         ttsPub.publish(tts)
     else :
         raise Exception("Sorry, An exception occurred")      

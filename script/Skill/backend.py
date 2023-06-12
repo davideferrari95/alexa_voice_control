@@ -1,36 +1,27 @@
 #!/usr/bin/env python3
-#!/home/alberto/miniconda3/envs/davide_env/bin python3
+#!/home/davide/miniconda3/envs/alexa_env/bin python3
 
-import os, rospy, subprocess
+import rospy, subprocess
 import time, threading
 from flask import Flask
-from flask_ngrok import run_with_ngrok
 from flask_ask import Ask, question, statement, session
-from std_msgs.msg import String,Bool, Int32MultiArray
-import threading, requests 
+from std_msgs.msg import Int32MultiArray
 
-
-
+# Create Flask App
 app = Flask(__name__)
 ask = Ask(app, "/")
 
-
-# ROS node, publisher, and parameter.
-# The node is started in a separate thread to avoid conflicts with Flask.
-# The parameter *disable_signals* must be set if node is not initialized
-# in the main thread.
-
-# needers_file = '/home/alberto/catkin_ws/src/alexa_voice_control/src/needer.py'
+# Open ROS Skill Server in a Separate Thread
 threading.Thread(target=lambda: rospy.init_node('skill_server', disable_signals=True)).start()
 
-node_red="node-red"
-
-# Avvia Node-RED in un nuovo processo
-NODE_RED = subprocess.Popen(node_red, shell=True)
-
+# Launch Node-RED in a New Process
+NODE_RED = subprocess.Popen("node-red", shell=True)
 time.sleep(2)
 
+# ROS Publishers
 pub = rospy.Publisher('voice', Int32MultiArray, queue_size=1)
+
+# Custom Variables
 msg = Int32MultiArray()
 command = [0]
 
@@ -361,6 +352,5 @@ if __name__ == '__main__':
         app.run()
     except rospy.ROSInterruptException:
         pass
-    
 
 NODE_RED.wait()
