@@ -1,0 +1,102 @@
+[
+    {
+        "id": "43552bcb0b2fa19d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "70e5fc7192699384",
+        "type": "alexa-remote-init",
+        "z": "43552bcb0b2fa19d",
+        "name": "",
+        "account": "e68e29051f4fe11e",
+        "option": "initialise",
+        "x": 340,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b28db6ce6e21dd19",
+        "type": "ros-subscribe",
+        "z": "43552bcb0b2fa19d",
+        "server": "d5573a5bee7c42db",
+        "topicname": "/tts",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "a1cb9fd96bcafb5e"
+            ]
+        ]
+    },
+    {
+        "id": "a1cb9fd96bcafb5e",
+        "type": "alexa-remote-routine",
+        "z": "43552bcb0b2fa19d",
+        "name": "",
+        "account": "e68e29051f4fe11e",
+        "routineNode": {
+            "type": "speak",
+            "payload": {
+                "type": "regular",
+                "text": {
+                    "type": "str",
+                    "value": ""
+                },
+                "devices": [
+                    "G091AA1220370VEG"
+                ]
+            }
+        },
+        "x": 340,
+        "y": 240,
+        "wires": [
+            [
+                "c372d38085e7de10"
+            ]
+        ]
+    },
+    {
+        "id": "c372d38085e7de10",
+        "type": "debug",
+        "z": "43552bcb0b2fa19d",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "e68e29051f4fe11e",
+        "type": "alexa-remote-account",
+        "name": "NodeRED ros",
+        "authMethod": "proxy",
+        "proxyOwnIp": "192.168.1.156",
+        "proxyPort": "3456",
+        "cookieFile": "AuthFile",
+        "refreshInterval": "3",
+        "alexaServiceHost": "alexa.amazon.it",
+        "amazonPage": "amazon.it",
+        "acceptLanguage": "en-US",
+        "onKeywordInLanguage": "",
+        "userAgent": "",
+        "useWsMqtt": "on",
+        "autoInit": "on"
+    },
+    {
+        "id": "d5573a5bee7c42db",
+        "type": "ros-server",
+        "url": "ws://localhost:9091/"
+    }
+]

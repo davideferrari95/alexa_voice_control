@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+	        <arg name="port" value="9091"/>
+	</include>
+	<node pkg="alexa_voice_control" type="skill.py" name="skill_node" output="screen"/>
+</launch>

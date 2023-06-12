@@ -27,6 +27,11 @@ add_service_files(
   String.srv
 )
 
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+)
+
 generate_messages(
   DEPENDENCIES
   std_msgs
@@ -65,9 +70,8 @@ target_link_libraries(alexa_voice_control_Node ${catkin_LIBRARIES})
 
 install(
   PROGRAMS
-	src/Alexa_TTS/alexa_tts.py
 	src/Skill_Server/flask_ngrok.py
-	src/Skill_Server/skill_server.py
+	src/Skill_Server/skill_davr.py
   DESTINATION
   	${CATKIN_PACKAGE_PYTHON_DESTINATION}
 )

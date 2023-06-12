@@ -1,0 +1,456 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "robot collaborativo",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "PrendiOggetto",
+                    "slots": [
+                        {
+                            "name": "oggetto",
+                            "type": "oggetti"
+                        },
+                        {
+                            "name": "area",
+                            "type": "area"
+                        }
+                    ],
+                    "samples": [
+                        "di prendermi quel {oggetto} là",
+                        "di prendermi questo {oggetto} qui ",
+                        "di prendermi questa {oggetto} qua",
+                        "di prendermi questa {oggetto} qui ",
+                        "di prendermi quella {oggetto} lì",
+                        "di prendere quellla {oggetto} là",
+                        "prendi quelle {oggetto} là",
+                        "prendi quella {oggetto} là",
+                        "prendi quegli {oggetto} là",
+                        "prendi quegli {oggetto} lì",
+                        "prendi quella {oggetto}",
+                        "prendi quellì {oggetto} là",
+                        "prendi l' {oggetto} nell'area {area}",
+                        "di prendere l' {oggetto} nell'area {area}",
+                        "di prendere il {oggetto} nell {area}",
+                        "prendermi il {oggetto} nel {area}",
+                        "di prendermi il {oggetto} nell' {area}",
+                        "di prendere il {oggetto} nell' {area}",
+                        "di prendere la {oggetto} nell' {area} ",
+                        "prendere l' {oggetto} nell' {area}",
+                        "di prendere l' {oggetto} nell' {area}",
+                        "prendimi l'   {oggetto} nell' {area}",
+                        "prendimi la {oggetto} a {area}",
+                        "prendimi il {oggetto} a {area}",
+                        "prendimi i {oggetto} a {area}",
+                        "prendimi i {oggetto}",
+                        "di prendere i {oggetto}",
+                        "prendere i {oggetto}",
+                        "prendimi quello {oggetto}",
+                        "prendimi quella {oggetto}",
+                        "prendimi quell' {oggetto}",
+                        "di prendere la {oggetto}",
+                        "di prendere il {oggetto}",
+                        "prendere l' {oggetto}",
+                        "prendere il {oggetto}",
+                        "portami il {oggetto}",
+                        "voglio la {oggetto} ",
+                        "voglio il {oggetto}",
+                        "prendimi la {oggetto}",
+                        "prendimi il {oggetto}",
+                        "prendimi l' {oggetto}"
+                    ]
+                },
+                {
+                    "name": "qualiOggetti",
+                    "slots": [
+                        {
+                            "name": "area",
+                            "type": "area"
+                        },
+                        {
+                            "name": "oggettoGenerico",
+                            "type": "oggettiGenerici"
+                        },
+                        {
+                            "name": "oggettoSpecifico",
+                            "type": "oggettiSpecifici"
+                        }
+                    ],
+                    "samples": [
+                        "che oggetti ci sono {area}",
+                        "dove si trovano gli {oggettoSpecifico}",
+                        "dove si trovano i {oggettoSpecifico}",
+                        "che tipo di {oggettoGenerico} ci sono ",
+                        "che tipi di {oggettoGenerico} ci sono ",
+                        "quante {oggettoGenerico} ci sono ",
+                        "dove si trova la {oggettoSpecifico}",
+                        "dove si trova il {oggettoSpecifico}",
+                        "dove posso prendere la {oggettoSpecifico}",
+                        "dove posso prendere il {oggettoSpecifico}",
+                        "che oggetti ci sono nell' {area}",
+                        "che tipo di {oggettoGenerico} si trova nell' {area}",
+                        "quale {oggettoGenerico} si trova nell' {area}",
+                        "quali tipi di {oggettoGenerico} ci sono",
+                        "quanti {oggettoGenerico} ci sono"
+                    ]
+                },
+                {
+                    "name": "chiediPassi",
+                    "slots": [
+                        {
+                            "name": "step",
+                            "type": "step"
+                        }
+                    ],
+                    "samples": [
+                        "in cosa consiste l' {step}",
+                        "come devo {step}",
+                        "cosa devo fare per {step}",
+                        "in che consiste il {step}",
+                        "cosa devo fare"
+                    ]
+                },
+                {
+                    "name": "fineEsperimento",
+                    "slots": [
+                        {
+                            "name": "finito",
+                            "type": "finito"
+                        }
+                    ],
+                    "samples": [
+                        "ho {finito}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "direzione",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "dietro"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "avanti"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sinistra"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "destra"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "oggettiGenerici",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "pasta",
+                                "synonyms": [
+                                    "spaghetto",
+                                    "spaghetti"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pomodoro "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bicchiere",
+                                "synonyms": [
+                                    "bicchieri"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "coltelli ",
+                                "synonyms": [
+                                    "coltello"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta",
+                                "synonyms": [
+                                    "forchette"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "area",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "là"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "qua"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "qui"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "lì"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "area sinistra",
+                                "synonyms": [
+                                    "destra",
+                                    "area a destra"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "area destra",
+                                "synonyms": [
+                                    "sinistra",
+                                    "area a sinistra"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "oggettiSpecifici",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "pennette"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bicchiere verde",
+                                "synonyms": [
+                                    "il bicchiere verde"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bicchiere rosso",
+                                "synonyms": [
+                                    "il bicchiere rosso"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pelati ",
+                                "synonyms": [
+                                    "pomodori pelati ",
+                                    "il barattolo di pelati ",
+                                    "i pelati",
+                                    "pomodori pelati "
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "passata",
+                                "synonyms": [
+                                    "la passata di pomodoro",
+                                    "il sugo",
+                                    "il barattolo di passata",
+                                    "la passata"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "spaghetti ",
+                                "synonyms": [
+                                    "gli spaghetti",
+                                    "spaghetti barilla"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "coltello ",
+                                "synonyms": [
+                                    "il coltello "
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale iodato"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale grosso"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta di legno "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta di plastica"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "oggetti",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "bicchiere grigio"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bicchiere rosso"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "bicchiere"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta di plastica"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta di legno"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "forchetta"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "coltello"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pomodori pelati"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pomodoro"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pasta "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pennette "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "spaghetti "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale fino "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale grosso"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sale"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "step",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "raccogliere ingredienti "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "cucinare "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "apparecchiare"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "finito",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "finito"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
