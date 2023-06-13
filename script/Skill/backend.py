@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-#!/home/davide/miniconda3/envs/alexa_env/bin python3
+#!/home/davide/miniconda3/envs/test/bin python3
 
 import rospy, subprocess
 import time, threading
 from flask import Flask
 from flask_ask import Ask, question, statement, session
-from std_msgs.msg import Int32MultiArray
+from std_msgs.msg import Int32MultiArray, String
 
 # Create Flask App
 app = Flask(__name__)
@@ -20,6 +20,7 @@ time.sleep(2)
 
 # ROS Publishers
 pub = rospy.Publisher('voice', Int32MultiArray, queue_size=1)
+tts_pub = rospy.Publisher('/tts', String, queue_size=1)
 
 # Custom Variables
 msg = Int32MultiArray()
