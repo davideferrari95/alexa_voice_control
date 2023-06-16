@@ -332,7 +332,7 @@ def endExperiment():
 
 @ask.intent('AMAZON.StopIntent')
 def AmazonStop():
-    return statement('Goodbye')
+    return statement('Arrivederci')
 
 @ask.intent('AMAZON.HelpIntent')
 def AmazonHelp():
