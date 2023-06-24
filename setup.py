@@ -15,8 +15,8 @@ package_path = rospack.get_path('alexa_voice_control')
 # Set Permission to Executables
 os.chmod(package_path + "/ngrok/ngrok", 0o777)
 
-os.chmod(package_path + "/script/skill/backend.py", 0o777)
-os.chmod(package_path + "/script/TTS/Test_NodeRED.py", 0o777)
+os.chmod(package_path + "/script/Skill/backend.py", 0o777)
+os.chmod(package_path + "/script/TTS/node_red.py", 0o777)
 os.chmod(package_path + "/script/Exp_Manager.py", 0o777)
 
 # Create ngrok configuration files

@@ -1,0 +1,11 @@
+<launch>
+
+	<!-- Launch ROS-Bridge WebSocket -->
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+	        <arg name="port" value="9091"/>
+	</include>
+
+	<!-- Launch NddeRED -->
+	<node pkg="alexa_voice_control" type="node_red.py" name="node_red" output="screen"/>
+
+</launch>

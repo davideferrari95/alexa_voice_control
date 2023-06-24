@@ -34,7 +34,7 @@ include_directories(
 install(
   PROGRAMS
     script/Skill/backend.py
-    script/TTS/Test_NodeRED.py
+    script/TTS/node_red.py
     script/Exp_Manager.py
   DESTINATION
   	${CATKIN_PACKAGE_PYTHON_DESTINATION}
