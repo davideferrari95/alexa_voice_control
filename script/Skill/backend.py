@@ -33,7 +33,7 @@ def send_command(command, area=None):
     # Voice Command Message
     msg = VoiceCommand()
     msg.command = command
-    msg.area = area if area is not None else ''
+    msg.info = area if area is not None else ''
     command_pub.publish(msg)
 
 rospy.logwarn('Alexa Skill Initialized')

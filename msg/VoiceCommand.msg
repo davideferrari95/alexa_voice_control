@@ -1,2 +1,2 @@
 int32 command
-string area
+string info
