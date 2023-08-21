@@ -46,8 +46,8 @@ def homepage():
 @ask.launch
 def launch():
 
-    # Welcome Message and Re-Prompt
-    return question("")
+    # Welcome Message
+    return statement('welcome')
 
 @ask.intent('BeginExperiment')
 def BeginExperiment():
