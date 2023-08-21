@@ -49,10 +49,18 @@ def launch():
     # Welcome Message and Re-Prompt
     return question("")
 
+@ask.intent('BeginExperiment')
+def BeginExperiment():
+
+    """ Alexa, Start the experiment """
+
+    send_command(EXPERIMENT_START)
+    return statement('ok, I start the experiment')
+
 @ask.intent('MovedTheObject')
 def MovedTheObject():
 
-    """ Alexa, I moved it """
+    """ Alexa, I moved the object / obstacle """
 
     send_command(MOVED_OBJECT)
     return statement('ok, I resume the trajectory')
@@ -60,7 +68,7 @@ def MovedTheObject():
 @ask.intent('PutObject')
 def PutObject(area):
 
-    """ Alexa, put it here """
+    """ Alexa, put it / the object here """
 
     # Area Command if Defined
     if area is not None: send_command(PUT_OBJECT_IN_GIVEN_AREA, area)
@@ -91,21 +99,29 @@ def ReplanTrajectory():
     send_command(REPLAN_TRAJECTORY)
     return statement('ok, I search for a new trajectory')
 
+@ask.intent('Wait')
+def Wait():
+
+    """ Alexa, wait for the finish """
+
+    send_command(WAIT)
+    return statement('ok, I wait')
+
 @ask.intent('CanGo')
 def CanGo():
 
     """ Alexa, you can go """
 
     send_command(CAN_GO)
-    return statement('ok, I resume the trajectory')
+    return statement('ok, I resume the movement')
 
 @ask.intent('AMAZON.StopIntent')
 def AmazonStop():
-    return statement('Arrivederci')
+    return statement('Bye')
 
 @ask.intent('AMAZON.HelpIntent')
 def AmazonHelp():
-    return question('')
+    return statement('Help')
 
 # StopIntent: "Stop"
 @ask.session_ended
