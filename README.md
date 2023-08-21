@@ -103,7 +103,11 @@ Package that allows communication between ROS and Alexa, implementing two differ
 
 - Change skill end-point with the ngrok one:
 
-        https://2c13-151-38-117-194.eu.ngrok.io/api/HttpTriggerAlexaROS
+        https://2c92-79-42-218-6.ngrok-free.app
+
+- Change the Endpoint Sub-domain:
+
+        My development endpoint is a sub-domain of a domain that has a wildcard certificate from a certificate authority
 
 ### Launch Skill Back-End
 
