@@ -5,6 +5,23 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  message_generation
+)
+
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  VoiceCommand.msg
+)
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+    ${PROJECT_NAME}
 )
 
 ###################################
@@ -15,7 +32,8 @@ catkin_package(
   INCLUDE_DIRS 
 	# include
   CATKIN_DEPENDS
-	# message_runtime
+    rospy
+  	message_runtime
 )
 
 ###########
@@ -35,7 +53,6 @@ install(
   PROGRAMS
     script/Skill/backend.py
     script/TTS/node_red.py
-    script/Exp_Manager.py
   DESTINATION
   	${CATKIN_PACKAGE_PYTHON_DESTINATION}
 )
