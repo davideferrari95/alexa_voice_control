@@ -48,7 +48,7 @@ Package that allows communication between ROS and Alexa, implementing two differ
         npm install node-red-contrib-ros
         npm install node-red-contrib-alexa-remote2-applestrudel 
 
-### ROS bridge
+### ROS Bridge
 
 - Install rosbridge suite:
 
@@ -89,8 +89,24 @@ Package that allows communication between ROS and Alexa, implementing two differ
 
     Option &rarr; initialize
 
-## Configure Alexa Skill End-Point
+## Launch Instructions
 
-- change skill end-point with the ngrok one:
+- Activate the `conda` environment:
+
+        conda activate alexa_env
+
+### Configure Alexa Skill End-Point
+
+- Launch ngrok:
+  
+        ngrok http 5000
+
+- Change skill end-point with the ngrok one:
 
         https://2c13-151-38-117-194.eu.ngrok.io/api/HttpTriggerAlexaROS
+
+### Launch Skill Back-End
+
+- Launch the ROS bridge:
+
+        roslaunch alexa_voice_control skill_backend.launch
