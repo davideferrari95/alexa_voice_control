@@ -33,7 +33,8 @@ def send_command(command, area=None):
     # Voice Command Message
     msg = VoiceCommand()
     msg.command = command
-    msg.info = area if area is not None else ''
+    msg.info = command_info[command]
+    msg.area = area if area is not None else ''
     command_pub.publish(msg)
 
 rospy.logwarn('Alexa Skill Initialized')
@@ -89,7 +90,7 @@ def UserCantMove():
     """ Alexa, I can't move """
 
     send_command(USER_CANT_MOVE)
-    return question('ok, I can wait your command or replan the trajectory')
+    return question('ok, I wait for your command')
 
 @ask.intent('ReplanTrajectory')
 def ReplanTrajectory():
@@ -104,7 +105,7 @@ def Wait():
 
     """ Alexa, wait for the finish """
 
-    send_command(WAIT)
+    send_command(WAIT_FOR_COMMAND)
     return statement('ok, I wait')
 
 @ask.intent('CanGo')
