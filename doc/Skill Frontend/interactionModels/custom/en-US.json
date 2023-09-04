@@ -1,0 +1,147 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "slots": [],
+          "name": "BeginExperiment",
+          "samples": [
+            "begin the experiment",
+            "Ask to begin the experiment",
+            "tell to begin the experiment",
+            "tell to start the experiment",
+            "Ask to start the experiment",
+            "Start the experiment"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "MovedTheObject",
+          "samples": [
+            "tell that I moved the obstacle",
+            "tell that I moved the object",
+            "I moved the obstacle",
+            "I moved the object"
+          ]
+        },
+        {
+          "slots": [
+            {
+              "name": "area",
+              "type": "Area"
+            }
+          ],
+          "name": "PutObject",
+          "samples": [
+            "ask to put the object in the {area} area",
+            "put the object in the {area} area",
+            "put the object here",
+            "put it here",
+            "ask to put the object here",
+            "ask to put it here"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "UserMoved",
+          "samples": [
+            "tell that I moved",
+            "tell that I moved back",
+            "I moved back"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "UserCantMove",
+          "samples": [
+            "tell that I wont move",
+            "I\u0027m not moving",
+            "I can\u0027t move",
+            "tell that I can\u0027t move"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "ReplanTrajectory",
+          "samples": [
+            "ask to replan the trajectory",
+            "replan the trajectory"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "Wait",
+          "samples": [
+            "ask to wait",
+            "tell to wait",
+            "wait",
+            "tell to wait for the finish",
+            "wait for the finish"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "CanGo",
+          "samples": [
+            "tell to go",
+            "tell that you can go",
+            "you can go"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "HelpObject",
+          "samples": [
+            "I have it",
+            "Tell that I have it",
+            "Tell I have it",
+            "Ask that I have the block",
+            "Tell to open the gripper",
+            "Open the gripper",
+            " I have the block"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "right"
+              },
+              "id": "0"
+            },
+            {
+              "name": {
+                "value": "left"
+              },
+              "id": "1"
+            }
+          ],
+          "name": "Area"
+        }
+      ],
+      "invocationName": "voice control"
+    }
+  }
+}
