@@ -24,8 +24,8 @@ print()
 rospy.logwarn('TTS Initialized')
 
 # ROS Publishers
-command_pub = rospy.Publisher('voice_command', VoiceCommand, queue_size=1)
-tts_pub = rospy.Publisher('/tts', String, queue_size=1)
+command_pub = rospy.Publisher('/multimodal_fusion/voice_command', VoiceCommand, queue_size=1)
+tts_pub = rospy.Publisher('/alexa/tts', String, queue_size=1)
 time.sleep(1)
 
 def send_command(command, area=None):
