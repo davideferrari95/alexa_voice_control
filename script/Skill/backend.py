@@ -116,6 +116,14 @@ def CanGo():
     send_command(CAN_GO)
     return statement('ok, I resume the movement')
 
+@ask.intent('HelpObject')
+def HelpObject():
+
+    """ Alexa, I have the Object """
+
+    send_command(CAN_GO)
+    return statement('ok, I open the gripper')
+
 @ask.intent('AMAZON.StopIntent')
 def AmazonStop():
     return statement('Bye')
