@@ -1,0 +1,575 @@
+[
+    {
+        "id": "ea715408fc32b7d3",
+        "type": "tab",
+        "label": "Alexa Tecnopolo - ICRA 2023",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b9647648e6e43508",
+        "type": "ros-subscribe",
+        "z": "ea715408fc32b7d3",
+        "server": "d5573a5bee7c42db",
+        "topicname": "/alexa/tts",
+        "x": 320,
+        "y": 220,
+        "wires": [
+            [
+                "5c368e87860dcf4f",
+                "98977873bfcdc2f8"
+            ]
+        ]
+    },
+    {
+        "id": "5c368e87860dcf4f",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "speak",
+            "payload": {
+                "type": "regular",
+                "text": {
+                    "type": "msg",
+                    "value": "payload.data"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 900,
+        "y": 220,
+        "wires": [
+            [
+                "c128349c64d9e6b0"
+            ]
+        ],
+        "inputLabels": [
+            "/tts"
+        ]
+    },
+    {
+        "id": "c128349c64d9e6b0",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "e859b61ceedc7284",
+        "type": "alexa-remote-init",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "account": "ac7b59c675058ce4",
+        "option": "initialise",
+        "x": 320,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "98977873bfcdc2f8",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "d5ee620857868155",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "obstacle detected",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "textCommand",
+            "payload": {
+                "text": {
+                    "type": "str",
+                    "value": "ask voice conversation obstacle detected robot request dialog"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 910,
+        "y": 300,
+        "wires": [
+            [
+                "dc4594603e272384"
+            ]
+        ]
+    },
+    {
+        "id": "dc4594603e272384",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 20",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "cd6a432a6b2fdbeb",
+        "type": "ros-subscribe",
+        "z": "ea715408fc32b7d3",
+        "server": "d5573a5bee7c42db",
+        "topicname": "/alexa/events",
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "eb1f71adf1306ffe",
+                "2f83f0fbe45f36c5"
+            ]
+        ]
+    },
+    {
+        "id": "4c7add455e1fb455",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "move to user",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "textCommand",
+            "payload": {
+                "text": {
+                    "type": "str",
+                    "value": "ask voice conversation move to user robot request dialog"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 890,
+        "y": 360,
+        "wires": [
+            [
+                "15766e4db23c7afa"
+            ]
+        ]
+    },
+    {
+        "id": "15766e4db23c7afa",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 21",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "eb1f71adf1306ffe",
+        "type": "switch",
+        "z": "ea715408fc32b7d3",
+        "name": "event manager",
+        "property": "payload.data",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "obstacle detected",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "move to user",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "help special block",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "robot stopped scaling",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 520,
+        "y": 400,
+        "wires": [
+            [
+                "c529bebd480bbbe9"
+            ],
+            [
+                "1cdb6f0fcc0fa608"
+            ],
+            [
+                "be5d73e213e0f702"
+            ],
+            [
+                "929917ca32ef8ed4"
+            ]
+        ]
+    },
+    {
+        "id": "2f83f0fbe45f36c5",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 22",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "1cdb6f0fcc0fa608",
+        "type": "delay",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 360,
+        "wires": [
+            [
+                "4c7add455e1fb455"
+            ]
+        ]
+    },
+    {
+        "id": "c529bebd480bbbe9",
+        "type": "delay",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 300,
+        "wires": [
+            [
+                "d5ee620857868155"
+            ]
+        ]
+    },
+    {
+        "id": "64144d3a32bf9150",
+        "type": "ros-subscribe",
+        "z": "ea715408fc32b7d3",
+        "server": "d5573a5bee7c42db",
+        "topicname": "/alexa/test_voice_command",
+        "x": 380,
+        "y": 580,
+        "wires": [
+            [
+                "aa4b6bdb9b0d72df",
+                "fde8f4e5c6838ace"
+            ]
+        ]
+    },
+    {
+        "id": "b4cd35603eb1e59f",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "textCommand",
+            "payload": {
+                "text": {
+                    "type": "msg",
+                    "value": "payload.data"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 890,
+        "y": 580,
+        "wires": [
+            [
+                "7e600b1a6da630d9"
+            ]
+        ],
+        "inputLabels": [
+            "/tts"
+        ]
+    },
+    {
+        "id": "7e600b1a6da630d9",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 25",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "aa4b6bdb9b0d72df",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 26",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "fde8f4e5c6838ace",
+        "type": "delay",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 620,
+        "y": 580,
+        "wires": [
+            [
+                "b4cd35603eb1e59f"
+            ]
+        ]
+    },
+    {
+        "id": "be5d73e213e0f702",
+        "type": "delay",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 440,
+        "wires": [
+            [
+                "b79a9070291381b8"
+            ]
+        ]
+    },
+    {
+        "id": "b79a9070291381b8",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "help special block",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "textCommand",
+            "payload": {
+                "text": {
+                    "type": "str",
+                    "value": "ask voice conversation help special block robot request dialog"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 910,
+        "y": 440,
+        "wires": [
+            [
+                "8fd7d507baf7e831"
+            ]
+        ]
+    },
+    {
+        "id": "8fd7d507baf7e831",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 27",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "929917ca32ef8ed4",
+        "type": "delay",
+        "z": "ea715408fc32b7d3",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 720,
+        "y": 500,
+        "wires": [
+            [
+                "bdf6586a2d3f0723"
+            ]
+        ]
+    },
+    {
+        "id": "bdf6586a2d3f0723",
+        "type": "alexa-remote-routine",
+        "z": "ea715408fc32b7d3",
+        "name": "robot stopped scaling",
+        "account": "ac7b59c675058ce4",
+        "routineNode": {
+            "type": "textCommand",
+            "payload": {
+                "text": {
+                    "type": "str",
+                    "value": "ask voice conversation robot stopped scaling robot request dialog"
+                },
+                "devices": [
+                    "G090XG0900860BED"
+                ]
+            }
+        },
+        "x": 920,
+        "y": 500,
+        "wires": [
+            [
+                "dc2de532a4317893"
+            ]
+        ]
+    },
+    {
+        "id": "dc2de532a4317893",
+        "type": "debug",
+        "z": "ea715408fc32b7d3",
+        "name": "debug 28",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "d5573a5bee7c42db",
+        "type": "ros-server",
+        "url": "ws://localhost:9091/"
+    },
+    {
+        "id": "ac7b59c675058ce4",
+        "type": "alexa-remote-account",
+        "name": "Alexa-Davide",
+        "authMethod": "proxy",
+        "proxyOwnIp": "192.168.1.8",
+        "proxyPort": "3456",
+        "cookieFile": "AuthFile",
+        "refreshInterval": "5",
+        "alexaServiceHost": "alexa.amazon.it",
+        "amazonPage": "amazon.it",
+        "acceptLanguage": "it-IT",
+        "onKeywordInLanguage": "on",
+        "userAgent": "",
+        "useWsMqtt": "on",
+        "autoInit": "on"
+    }
+]
