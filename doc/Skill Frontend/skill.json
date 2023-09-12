@@ -4,7 +4,7 @@
       "custom": {
         "endpoint": {
           "sslCertificateType": "Wildcard",
-          "uri": "https://5fe3-155-185-245-82.ngrok-free.app"
+          "uri": "https://8dc2-155-185-245-82.ngrok-free.app"
         },
         "interfaces": [],
         "locales": {}
