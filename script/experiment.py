@@ -44,7 +44,7 @@ class ExperimentManager():
         self.ttsPub   = rospy.Publisher('/alexa/tts', String, queue_size=1)
 
         # Subscribers
-        rospy.Subscriber('/alexa_conversation/voice_command', VoiceCommand, self.commandCallback)
+        rospy.Subscriber('/alexa/voice_command', VoiceCommand, self.commandCallback)
 
         # Load Parameters
         self.gripper_enabled = rospy.get_param('/experiment/gripper_enabled', True)

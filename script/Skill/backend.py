@@ -27,7 +27,7 @@ print()
 rospy.logwarn('TTS Initialized')
 
 # ROS Publishers
-command_pub = rospy.Publisher('/multimodal_fusion/voice_command', VoiceCommand, queue_size=1)
+command_pub = rospy.Publisher('/alexa/voice_command', VoiceCommand, queue_size=1)
 tts_pub = rospy.Publisher('/alexa/tts', String, queue_size=1)
 time.sleep(1)
 
@@ -51,6 +51,7 @@ def homepage():
 def launch():
 
     # Welcome Message
+    print('Welcome')
     return statement('welcome')
 
 @ask.intent('BeginExperiment')
@@ -58,6 +59,7 @@ def BeginExperiment():
 
     """ Alexa, Start the experiment """
 
+    print('BeginExperiment')
     send_command(BEGIN_EXPERIMENT)
     return statement('ok, I start the experiment')
 
@@ -66,6 +68,7 @@ def ProvideScrew():
 
     """ Alexa, Give me the Screws """
 
+    print('ProvideScrew')
     send_command(PROVIDE_SCREW)
     return statement('ok, I bring you the screws')
 
@@ -74,6 +77,7 @@ def ProvideScrewdriver():
 
     """ Alexa, Give me the Screwdriver """
 
+    print('ProvideScrewdriver')
     send_command(PROVIDE_SCREWDRIVER)
     return statement('ok, I bring you the screwdriver')
 
@@ -82,6 +86,7 @@ def HoldObject():
 
     """ Alexa, Help me to hold the object """
 
+    print('HoldObject')
     send_command(HOLD_OBJECT)
     return statement('ok, tell me when I can take it')
 
@@ -90,6 +95,7 @@ def TakeObject():
 
     """ Alexa, you can take the object """
 
+    print('TakeObject')
     send_command(TAKE_OBJECT)
     return statement("ok, I'll take it")
 
@@ -98,6 +104,7 @@ def MoveMounting():
 
     """ Alexa, move to the mounting position """
 
+    print('MoveMounting')
     send_command(MOVE_MOUNTING)
     return statement("ok, I'll move to the mounting position")
 
