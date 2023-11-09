@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-import rospy, subprocess
+import rospy, rospkg, subprocess, sys
 import time, threading
 from flask import Flask
 from flask_ask import Ask, question, statement, session
 from std_msgs.msg import String
 from alexa_voice_control.msg import VoiceCommand
+
+# Import Parent Folders
+sys.path.append(f'{rospkg.RosPack().get_path("alexa_voice_control")}/script/utils')
 
 # Import Command Macros
 from command_list import *
@@ -28,13 +31,13 @@ command_pub = rospy.Publisher('/multimodal_fusion/voice_command', VoiceCommand, 
 tts_pub = rospy.Publisher('/alexa/tts', String, queue_size=1)
 time.sleep(1)
 
-def send_command(command, area=None):
+def send_command(command, object=None):
 
     # Voice Command Message
     msg = VoiceCommand()
     msg.command = command
     msg.info = command_info[command]
-    msg.area = area if area is not None else ''
+    msg.object = object if object is not None else ''
     command_pub.publish(msg)
 
 rospy.logwarn('Alexa Skill Initialized')
@@ -55,74 +58,48 @@ def BeginExperiment():
 
     """ Alexa, Start the experiment """
 
-    send_command(EXPERIMENT_START)
+    send_command(BEGIN_EXPERIMENT)
     return statement('ok, I start the experiment')
 
-@ask.intent('MovedTheObject')
-def MovedTheObject():
+@ask.intent('ProvideScrew')
+def ProvideScrew():
 
-    """ Alexa, I moved the object / obstacle """
+    """ Alexa, Give me the Screws """
 
-    send_command(MOVED_OBJECT)
-    return statement('ok, I resume the trajectory')
+    send_command(PROVIDE_SCREW)
+    return statement('ok, I bring you the screws')
 
-@ask.intent('PutObject')
-def PutObject(area):
+@ask.intent('ProvideScrewdriver')
+def ProvideScrewdriver():
 
-    """ Alexa, put it / the object here """
+    """ Alexa, Give me the Screwdriver """
 
-    # Area Command if Defined
-    if area is not None: send_command(PUT_OBJECT_IN_GIVEN_AREA, area)
-    else: send_command(PUT_OBJECT_IN_AREA)
-    return statement('ok')
+    send_command(PROVIDE_SCREWDRIVER)
+    return statement('ok, I bring you the screwdriver')
 
-@ask.intent('UserMoved')
-def UserMoved():
+@ask.intent('HoldObject')
+def HoldObject():
 
-    """ Alexa I moved back """
+    """ Alexa, Help me to hold the object """
 
-    send_command(USER_MOVED)
-    return statement("ok, I'm approaching the area near to you")
+    send_command(HOLD_OBJECT)
+    return statement('ok, tell me when I can take it')
 
-@ask.intent('UserCantMove')
-def UserCantMove():
+@ask.intent('TakeObject')
+def TakeObject():
 
-    """ Alexa, I can't move """
+    """ Alexa, you can take the object """
 
-    send_command(USER_CANT_MOVE)
-    return question('ok, I wait for your command')
+    send_command(TAKE_OBJECT)
+    return statement("ok, I'll take it")
 
-@ask.intent('ReplanTrajectory')
-def ReplanTrajectory():
+@ask.intent('MoveMounting')
+def MoveMounting():
 
-    """ Alexa, Replan the trajectory """
+    """ Alexa, move to the mounting position """
 
-    send_command(REPLAN_TRAJECTORY)
-    return statement('ok, I search for a new trajectory')
-
-@ask.intent('Wait')
-def Wait():
-
-    """ Alexa, wait for the finish """
-
-    send_command(WAIT_FOR_COMMAND)
-    return statement('ok, I wait')
-
-@ask.intent('CanGo')
-def CanGo():
-
-    """ Alexa, you can go """
-
-    send_command(CAN_GO)
-    return statement('ok, I resume the movement')
-
-@ask.intent('HelpObject')
-def HelpObject():
-
-    """ Alexa, I have the Object """
-
-    send_command(CAN_GO)
-    return statement('ok, I open the gripper')
+    send_command(MOVE_MOUNTING)
+    return statement("ok, I'll move to the mounting position")
 
 @ask.intent('AMAZON.StopIntent')
 def AmazonStop():
