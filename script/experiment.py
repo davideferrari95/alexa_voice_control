@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import rospy
+import rospy, rospkg, sys
 from typing import List
 
 # Import ROS Messages
@@ -8,10 +8,13 @@ from std_msgs.msg import String, Bool
 from geometry_msgs.msg import Pose
 from alexa_voice_control.msg import VoiceCommand
 
+# Import Parent Folders
+sys.path.append(f'{rospkg.RosPack().get_path("alexa_voice_control")}/script/utils')
+
 # Move Robot Utilities
-from utils.move_robot import UR10e_RTDE_Move, GRIPPER_OPEN, GRIPPER_CLOSE
-from utils.command_list import *
-from utils.object_list import HOME_POSITION, PLACE_POSITION, HOLD_POSITION, MOUNT_POSITION, get_object_positions
+from move_robot import UR10e_RTDE_Move, GRIPPER_OPEN, GRIPPER_CLOSE
+from command_list import *
+from object_list import HOME_POSITION, PLACE_POSITION, HOLD_POSITION, MOUNT_POSITION, get_object_positions
 
 """
 
@@ -49,6 +52,9 @@ class ExperimentManager():
         # Load Parameters
         self.gripper_enabled = rospy.get_param('/experiment/gripper_enabled', True)
 
+        # Initialization Sleep
+        rospy.sleep(1)
+
     def commandCallback(self, data:VoiceCommand):
 
         rospy.logwarn(f"Received Command: {data}")
@@ -84,7 +90,7 @@ class ExperimentManager():
 
         # Move Gripper to Starting Position
         rospy.loginfo('Open Gripper')
-        if not self.robot.move_gripper(GRIPPER_OPEN, self.gripper_enabled): return False
+        if not self.robot.move_gripper(GRIPPER_OPEN, gripper_enabled=self.gripper_enabled): return False
 
         # Forward + Inverse Kinematic -> Increase z + 10cm
         rospy.loginfo('Forward Kinematic + Inverse Kinematic -> Increase z + 10cm')
@@ -102,7 +108,9 @@ class ExperimentManager():
 
         # Grip Object
         rospy.loginfo('Close Gripper')
-        if not self.robot.move_gripper(GRIPPER_CLOSE, self.gripper_enabled): return False
+        if object_name == 'screws': 
+            if not self.robot.move_gripper(GRIPPER_CLOSE, 50, 50, gripper_enabled=self.gripper_enabled): return False
+        elif not self.robot.move_gripper(GRIPPER_CLOSE, gripper_enabled=self.gripper_enabled): return False
         rospy.sleep(1)
 
         # Move 10cm Over the Object
@@ -125,7 +133,7 @@ class ExperimentManager():
 
         # Release Object
         rospy.loginfo('Open Gripper')
-        if not self.robot.move_gripper(GRIPPER_OPEN, self.gripper_enabled): return False
+        if not self.robot.move_gripper(GRIPPER_OPEN, gripper_enabled=self.gripper_enabled): return False
         rospy.sleep(1)
 
         # Move 10cm Over the Place Position
@@ -144,7 +152,7 @@ class ExperimentManager():
 
         # Move Gripper to Starting Position
         rospy.loginfo('Open Gripper')
-        if not self.robot.move_gripper(GRIPPER_OPEN, self.gripper_enabled): return False
+        if not self.robot.move_gripper(GRIPPER_OPEN, gripper_enabled=self.gripper_enabled): return False
 
         # Move to Object Hold Position
         rospy.loginfo('Move To the Hold Position')
@@ -158,7 +166,7 @@ class ExperimentManager():
 
         # Grip Object
         rospy.loginfo('Close Gripper')
-        if not self.robot.move_gripper(GRIPPER_CLOSE, self.gripper_enabled): return False
+        if not self.robot.move_gripper(GRIPPER_CLOSE, gripper_enabled=self.gripper_enabled): return False
         rospy.sleep(1)
 
         return True
@@ -176,6 +184,10 @@ class ExperimentManager():
     def run(self):
 
         """ Run the Experiment """
+
+        # Move to Home
+        rospy.loginfo('Move To Home')
+        if not self.robot.move_joint(HOME_POSITION): return False
 
         # Wait for Experiment Start
         while not self.experiment_started and not rospy.is_shutdown(): rospy.loginfo_throttle(5, 'Waiting for Experiment Start')

@@ -33,7 +33,8 @@ class UR10e_RTDE_Move():
         self.cartesianPub = rospy.Publisher('/ur_rtde/controllers/cartesian_space_controller/command', CartesianPoint, queue_size=1)
 
         # Subscribers
-        self.trajectory_execution_sub = rospy.Subscriber('/trajectory_execution', Bool, self.trajectory_execution_callback)
+        # self.trajectory_execution_sub = rospy.Subscriber('/trajectory_execution', Bool, self.trajectory_execution_callback)
+        self.trajectory_execution_sub = rospy.Subscriber('/ur_rtde/trajectory_executed', Bool, self.trajectory_execution_callback)
 
         # Init Gripper Service
         self.gripper_srv = rospy.ServiceProxy('/ur_rtde/robotiq_gripper/command', RobotiQGripperControl)
@@ -150,7 +151,7 @@ class UR10e_RTDE_Move():
 
         return list(res.joint_position)
 
-    def move_gripper(self, position, gripper_enabled=True) -> bool:
+    def move_gripper(self, position, speed=100, force=100,gripper_enabled=True) -> bool:
 
         """ Open-Close Gripper Function """
 
@@ -159,7 +160,7 @@ class UR10e_RTDE_Move():
 
         # Set Gripper Request
         req = RobotiQGripperControlRequest()
-        req.position, req.speed, req.force = position, 100, 100
+        req.position, req.speed, req.force = position, speed, force
 
         # Call Gripper Service
         rospy.wait_for_service('/ur_rtde/robotiq_gripper/command')
