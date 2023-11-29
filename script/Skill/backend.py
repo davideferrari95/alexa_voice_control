@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-import rospy, rospkg, subprocess, sys
+import rclpy, subprocess, sys
 import time, threading
+
 from flask import Flask
 from flask_ask import Ask, question, statement, session
 from std_msgs.msg import String
 from alexa_voice_control.msg import VoiceCommand
+from pathlib import Path
 
 # Import Parent Folders
-sys.path.append(f'{rospkg.RosPack().get_path("alexa_voice_control")}/script/utils')
+sys.path.append(str(Path(__file__).resolve().parents[1] / "utils"))
 
 # Import Command Macros
 from command_list import *
@@ -16,31 +18,6 @@ from command_list import *
 # Create Flask App
 app = Flask(__name__)
 ask = Ask(app, "/")
-
-# Open ROS Skill Server in a Separate Thread
-threading.Thread(target=lambda: rospy.init_node('skill_server', disable_signals=True)).start()
-
-# Launch Node-RED in a New Process
-NODE_RED = subprocess.Popen("node-red", shell=True)
-time.sleep(2)
-print()
-rospy.logwarn('TTS Initialized')
-
-# ROS Publishers
-command_pub = rospy.Publisher('/alexa/voice_command', VoiceCommand, queue_size=1)
-tts_pub = rospy.Publisher('/alexa/tts', String, queue_size=1)
-time.sleep(1)
-
-def send_command(command, object=None):
-
-    # Voice Command Message
-    msg = VoiceCommand()
-    msg.command = command
-    msg.info = command_info[command]
-    msg.object = object if object is not None else ''
-    command_pub.publish(msg)
-
-rospy.logwarn('Alexa Skill Initialized')
 
 @app.route("/")
 def homepage():
@@ -123,9 +100,36 @@ def session_ended():
 
 if __name__ == '__main__':
 
+
+    # Open ROS Skill Server in a Separate Thread
+    rclpy.init()
+    node = rclpy.create_node('skill_server')
+
+    # Launch Node-RED in a New Process
+    NODE_RED = subprocess.Popen("node-red", shell=True)
+    time.sleep(2)
+    print()
+    node.get_logger().warn('TTS Initialized')
+
+    # ROS Publishers
+    command_pub = node.create_publisher(VoiceCommand, '/alexa/voice_command', 1)
+    tts_pub = node.create_publisher(String, '/alexa/tts', 1)
+    time.sleep(1)
+
+    def send_command(command, object=None):
+
+        # Voice Command Message
+        msg = VoiceCommand()
+        msg.command = command
+        msg.info = command_info[command]
+        msg.object = object if object is not None else ''
+        command_pub.publish(msg)
+
+    node.get_logger().warn('Alexa Skill Initialized')
+
     # Try Flask App Run -> Skill Back-End
     try: app.run()
-    except rospy.ROSInterruptException: pass
+    except: pass
 
     # Node-RED Wait
     NODE_RED.wait()

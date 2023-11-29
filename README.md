@@ -1,16 +1,16 @@
 # alexa_voice_control
 
-Package that allows communication between ROS and Alexa, implementing two different communication channels:
+Package that allows communication between ROS2 and Alexa, implementing two different communication channels:
 
-- User &rarr; ROS: through a custom Alexa Conversation Skill that communicates with a local server in azure functions.
-- ROS &rarr; User: using unsolicited Text-To-Speech of Node-RED block that use Alexa-API
+- User &rarr; ROS2: through a custom Alexa Skill that communicates with a local server in azure functions.
+- ROS2 &rarr; User: using unsolicited Text-To-Speech of Node-RED block that use Alexa-API
 
 ## Requirements
 
 - Ubuntu 20.04+
-- Python 3.8+
-- ROS Noetic+
-- ROS bridge
+- Python 3.8.x
+- ROS2 Foxy+
+- ROS2 bridge
 - Node-RED
 - ngrok
 
@@ -18,7 +18,7 @@ Package that allows communication between ROS and Alexa, implementing two differ
 
 - Install `miniconda` and create a custom environment:
 
-        conda create -n alexa_env python=3.10
+        conda create -n alexa_env python=3.8.10
         conda activate alexa_env
 
 - Launch `setup.py` for installing the requirements:
@@ -52,7 +52,7 @@ Package that allows communication between ROS and Alexa, implementing two differ
 
 - Install rosbridge suite:
 
-        sudo apt-get install ros-noetic-rosbridge-server
+        sudo apt-get install ros-foxy-rosbridge-server
 
 ### Ngrok
 
@@ -113,4 +113,4 @@ Package that allows communication between ROS and Alexa, implementing two differ
 
 - Launch the ROS bridge:
 
-        roslaunch alexa_voice_control skill_backend.launch
+        ros2 launch alexa_voice_control skill_backend.launch.py

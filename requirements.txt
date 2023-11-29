@@ -10,3 +10,5 @@ tornado
 pymongo
 Pillow
 service_identity
+werkzeug==2.3.6
+numpy

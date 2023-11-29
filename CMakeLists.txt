@@ -1,58 +1,66 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.5)
 project(alexa_voice_control)
 
-add_compile_options(-std=c++17)
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS
-  rospy
-  message_generation
+# Default to C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# Find Dependencies
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclpy REQUIRED)
+
+# Find Messages Generation Dependencies
+find_package(rosidl_default_generators REQUIRED)
+
+# Set Cusom Messages
+set(msg_files
+  "msg/VoiceCommand.msg"
 )
 
-################################################
-## Declare ROS messages, services and actions ##
-################################################
-
-## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  VoiceCommand.msg
-)
-
-## Generate added messages and services with any dependencies listed here
-generate_messages(
+# Generate Messages, Services and Actions
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
   DEPENDENCIES
-    ${PROJECT_NAME}
 )
 
-###################################
-## catkin specific configuration ##
-###################################
-
-catkin_package(
-  INCLUDE_DIRS 
-	# include
-  CATKIN_DEPENDS
-    rospy
-  	message_runtime
-)
-
-###########
-## Build ##
-###########
-
+# Include C++ Directories
 include_directories(
-	# include
-  ${catkin_INCLUDE_DIRS}
+  # include
+  ${${PROJECT_NAME}_INCLUDE_DIRS}
 )
 
-#############
-## Install ##
-#############
+# Install Python Modules
+ament_python_install_package(${PROJECT_NAME})
 
-install(
-  PROGRAMS
-    script/Skill/backend.py
-    script/TTS/node_red.py
-  DESTINATION
-  	${CATKIN_PACKAGE_PYTHON_DESTINATION}
+# Install Python Scripts
+install(PROGRAMS
+  script/Skill/backend.py
+  script/TTS/node_red.py
+  DESTINATION lib/${PROJECT_NAME}
 )
+
+# Install Launch Files
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  #set(ament_cmake_copyright_FOUND TRUE)
+  #set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
