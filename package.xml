@@ -5,7 +5,7 @@
 
   <name>alexa_voice_control</name>
   <version>0.0.0</version>
-  <description>ROS2 alexa_voice_control package</description>
+  <description>ROS2 Alexa Voice Control Package</description>
 
   <!-- Maintainer, Author, License -->
   <maintainer email="davide.ferrari95@unimore.it">Davide Ferrari</maintainer>

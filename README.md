@@ -8,8 +8,8 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 ## Requirements
 
 - Ubuntu 20.04+
-- Python 3.8.x
-- ROS2 Foxy+
+- Python 3.8.10
+- ROS2 Foxy
 - ROS2 bridge
 - Node-RED
 - ngrok
@@ -45,7 +45,7 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
     or in bash:
 
-        npm install node-red-contrib-ros
+        npm install node-red-contrib-ros2
         npm install node-red-contrib-alexa-remote2-applestrudel 
 
 ### ROS Bridge
