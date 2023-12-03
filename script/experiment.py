@@ -45,7 +45,7 @@ class ExperimentManager(Node):
         self.tts_pub = self.create_publisher(String, '/alexa/tts', 1)
 
         # Subscribers
-        self.voice_command_sub = self.create_subscription(VoiceCommand, '/alexa/voice_command', self.command_callback, 1)
+        self.voice_command_sub = self.create_subscription(VoiceCommand, '/alexa/voice_command', self.commandCallback, 1)
 
         # Load Parameters
         self.declare_parameter('gripper_enabled', False)
@@ -54,7 +54,7 @@ class ExperimentManager(Node):
         # Initialization Sleep
         time.sleep(1)
 
-    def command_callback(self, data: VoiceCommand):
+    def commandCallback(self, data: VoiceCommand):
 
         """ Voice Command Callback """
 
@@ -120,7 +120,7 @@ class ExperimentManager(Node):
 
         # Forward + Inverse Kinematic -> Increase z + 10cm
         self.get_logger().info('Forward Kinematic + Inverse Kinematic -> Increase z + 10cm')
-        place_position_cartesian: Pose = self.robot.FK(place_position)
+        place_position_cartesian:Pose = self.robot.FK(place_position)
         place_position_cartesian.position.z += 0.10
         place_position_up: List[float] = self.robot.IK(place_position_cartesian, place_position)
 
@@ -191,7 +191,7 @@ class ExperimentManager(Node):
         if not self.robot.move_joint(HOME_POSITION): return False
 
         # Wait for Experiment Start
-        while not self.experiment_started and rclpy.ok(): self.get_logger().info_throttle(5, 'Waiting for Experiment Start')
+        while not self.experiment_started and rclpy.ok(): self.get_logger().info('Waiting for Experiment Start', throttle_duration_sec=5, skip_first=True)
 
         # Start Experiment -> Pick-And-Place Base
         self.get_logger().warn('Start Experiment - Move to Home')

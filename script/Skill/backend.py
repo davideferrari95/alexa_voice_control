@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import rclpy, subprocess, sys
-import time, threading
+import rclpy, time
+import subprocess, sys
 
 from flask import Flask
 from flask_ask import Ask, question, statement, session
