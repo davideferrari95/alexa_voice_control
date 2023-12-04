@@ -106,7 +106,7 @@ if __name__ == '__main__':
     node = rclpy.create_node('skill_server')
 
     # Launch Node-RED in a New Process
-    NODE_RED = subprocess.Popen("node-red", shell=True)
+    NODE_RED = subprocess.Popen("node-red -u ~/.node-red-2", shell=True)
     time.sleep(2)
     print()
     node.get_logger().warn('TTS Initialized')

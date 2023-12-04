@@ -1,4 +1,4 @@
-# alexa_voice_control
+# Alexa Voice Control
 
 Package that allows communication between ROS2 and Alexa, implementing two different communication channels:
 
@@ -21,9 +21,9 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
         conda create -n alexa_env python=3.8.10
         conda activate alexa_env
 
-- Launch `setup.py` for installing the requirements:
+- Install Python Requirements:
 
-        python setup.py
+        pip install -r ../path/to/this/repo/requirements.txt
 
 ### Node-RED
 
@@ -38,15 +38,49 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
         sudo apt install npm
         sudo npm install -g --unsafe-perm node-red
 
-    In Node-RED &rarr; manage palet &rarr; install:
+- Install `node-red-contrib-alexa-remote2-applestrudel` and `node-red-ros2-plugin`:
 
-        node-red-contrib-alexa-remote2-applestrudel
-        node-red-contrib-ros
-
-    or in bash:
-
-        npm install node-red-contrib-ros2
+        node-red -u ~/.node-red-2
+        cd ~/.node-red-2
         npm install node-red-contrib-alexa-remote2-applestrudel 
+        npm install node-red-ros2-plugin
+
+#### Configuration of `node-red-contrib-alexa-remote2-applestrudel`
+
+- Add the `Alexa Init` Node to the Node-RED flow
+
+- Edit the `Alexa Init` Node properties to add your Alexa Account:
+
+    Account &rarr; Add new Alexa Account &rarr; Edit (Pencil Icon):
+
+        Name: <Custom_Name>
+        Auth Method: Proxy
+        This IP: localhost
+        Port : 3456
+        File Path : AuthFile
+        
+        Service Host: alexa.amazon.it
+        Page:amazon.it
+        Language: it-IT
+
+- Click on the `Add` button and follow the instructions to add your account (you will be redirected to the Amazon Alexa login page)
+
+- Click on the `Deploy` button to save the configuration
+
+#### Configuration of `node-red-ros2-plugin`
+
+- Open the `websocket_client.js` file in the `node-red-ros2-plugin` folder:
+
+        cd ~/.node-red-2/node_modules/is-web-api/src
+        code websocket_client.js
+
+- Replace the line 47:
+
+        this.#ws_port = Math.floor(Math.random() * 16383 + 49152);
+
+- with the following code:
+
+        this.#ws_port = 9091;
 
 ### ROS Bridge
 
@@ -64,30 +98,18 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 - Add your Token in the `ngrok.yml` file in the `ngrok` folder
 
-### Configuration Node-RED contrib ROS
+## Node-RED Flows Configuration
 
-- in sub/pub node &rarr; ROS SERVER &rarr; add new ros server:
+- Import the `flows.json` files in the `scripts` folder to Node-RED to have a working example of the flows.
 
-        url: ws://localhost:9091/
-        Topic: name_topic
+- Use the `Alexa Init` Node to add your Alexa Account
+- Use the `Alexa Routine` Node to play voice messages
 
-### Configuration Node-RED contrib Alexa Remote 2
-
-- in Alexa initialize node:
-
-    Account &rarr; Add new Alexa Account:
-
-        Name: Nome
-        Auth Method: Proxy
-        This IP: IP_ADDRESS
-        Port : 3456
-        File Path : AuthFile
-        
-        Service Host: alexa.amazon.it
-        Page:amazon.it
-        Language: it-IT
-
-    Option &rarr; initialize
+- Use the `ROS2 Inject` Node linked to the `ROS2 Type` and `ROS2 Subscriber` Nodes to subscribe to ROS2 topics.
+- Use the `ROS2 Inject` Node linked to the `ROS2 Type` and `ROS2 Publisher` Nodes to publish to ROS2 topics.
+- Configure the `ROS2 Type` Node to match the message type.
+- Configure the `ROS2 Subscriber` or `ROS2 Publisher` Node to match the topic name.
+- Set the Domain ID of the `ROS2 Subscriber` or `ROS2 Publisher` Node to the same value of the ROS2 Bridge (Try Setting to 0).
 
 ## Launch Instructions
 
