@@ -10,9 +10,7 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 - Ubuntu 20.04+
 - Python 3.8.10
 - ROS2 Foxy
-- ROS2 bridge
-- Node-RED
-- ngrok
+- Anaconda / Miniconda
 
 ## Installation
 
@@ -57,8 +55,8 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
         Auth Method: Proxy
         This IP: localhost
         Port : 3456
-        File Path : AuthFile
-        
+        File Path : /home/<user>/AuthFile
+
         Service Host: alexa.amazon.it
         Page:amazon.it
         Language: it-IT
@@ -69,29 +67,39 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 #### Configuration of `node-red-ros2-plugin`
 
-- Open the `websocket_client.js` file in the `node-red-ros2-plugin` folder:
+- Install dependencies:
 
-        cd ~/.node-red-2/node_modules/is-web-api/src
-        code websocket_client.js
+        apt-get install libyaml-cpp-dev libboost-program-options-dev \
+         libwebsocketpp-dev libboost-system-dev libboost-dev libssl-dev \
+         libcurlpp-dev libasio-dev libcurl4-openssl-dev git
 
-- Replace the line 47:
+- Clone `Integration-Service` Packages: [Official Guide](https://github.com/eProsima/node-red-ros2-plugin)
 
-        this.#ws_port = Math.floor(Math.random() * 16383 + 49152);
+        cd ~/colcon_ws/src
+        mkdir Node-RED && cd "$_"
+        git clone https://github.com/eProsima/Integration-Service.git
+        git clone https://github.com/eProsima/WebSocket-SH.git
+        git clone https://github.com/eProsima/ROS2-SH.git
+        git clone https://github.com/eProsima/FIWARE-SH.git
 
-- with the following code:
+- Build `Integration-Service` Packages:
 
-        this.#ws_port = 9091;
+        cd ~/colcon_ws
+        source /opt/ros/foxy/setup.bash
+        colcon build --cmake-args -DIS_ROS2_SH_MODE=DYNAMIC
 
-### ROS Bridge
+- Source `Integration-Service` Packages:
 
-- Install rosbridge suite:
+        . ~/colcon_ws/install/setup.bash
 
-        sudo apt-get install ros-foxy-rosbridge-server
+- Add `export ROS_DOMAIN_ID=10` to `~/.bashrc` to set the Domain ID to `10`:
+
+        echo "export ROS_DOMAIN_ID=10" >> ~/.bashrc
 
 ### Ngrok
 
 - Install Ngrok
-  
+
         sudo apt update
         sudo apt install snapd
         sudo snap install ngrok
@@ -100,16 +108,16 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 ## Node-RED Flows Configuration
 
-- Import the `flows.json` files in the `scripts` folder to Node-RED to have a working example of the flows.
+Example: Import `example_flows.json` files in the `scripts` folder to Node-RED to have a working example of the flows.
 
 - Use the `Alexa Init` Node to add your Alexa Account
 - Use the `Alexa Routine` Node to play voice messages
 
-- Use the `ROS2 Inject` Node linked to the `ROS2 Type` and `ROS2 Subscriber` Nodes to subscribe to ROS2 topics.
+- Use the `ROS2 Type` Node linked to the `ROS2 Subscriber` Node to subscribe to ROS2 topics.
 - Use the `ROS2 Inject` Node linked to the `ROS2 Type` and `ROS2 Publisher` Nodes to publish to ROS2 topics.
 - Configure the `ROS2 Type` Node to match the message type.
 - Configure the `ROS2 Subscriber` or `ROS2 Publisher` Node to match the topic name.
-- Set the Domain ID of the `ROS2 Subscriber` or `ROS2 Publisher` Node to the same value of the ROS2 Bridge (Try Setting to 0).
+- Set the Domain ID of the `ROS2 Subscriber` or `ROS2 Publisher` Node to the same value of the ROS2 Bridge (Equal to `export ROS_DOMAIN_ID`).
 
 ## Launch Instructions
 
@@ -117,10 +125,16 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
         conda activate alexa_env
 
+- Remember to source ROS2 and export the Domain ID (if not in `~/.bashrc`):
+
+        source /opt/ros/foxy/setup.bash
+        . ~/colcon_ws/install/setup.bash
+        export ROS_DOMAIN_ID=10
+
 ### Configure Alexa Skill End-Point
 
 - Launch ngrok:
-  
+
         ngrok http 5000
 
 - Change skill end-point with the ngrok one:
@@ -133,6 +147,10 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 ### Launch Skill Back-End
 
-- Launch the ROS bridge:
+- Launch Skill Backend + Node-RED:
 
         ros2 launch alexa_voice_control skill_backend.launch.py
+
+- Launch only Node-RED:
+
+        ros2 launch alexa_voice_control node_red.launch.py
