@@ -2,7 +2,7 @@
 
 Package that allows communication between ROS2 and Alexa, implementing two different communication channels:
 
-- User &rarr; ROS2: through a custom Alexa Skill that communicates with a local server in azure functions.
+- User &rarr; ROS2: through a custom Alexa Skill that communicates with a local server.
 - ROS2 &rarr; User: using unsolicited Text-To-Speech of Node-RED block that use Alexa-API
 
 ## Requirements
@@ -14,7 +14,15 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 ## Installation
 
-- Install `miniconda` and create a custom environment:
+### Prerequisites
+
+- Install ROS2 Foxy: [Ubuntu Guide](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
+
+        sudo apt install ros-foxy-desktop python3-argcomplete
+
+- Install `miniconda`: [Official Guide](https://docs.conda.io/en/main/miniconda.html)
+
+- Create a `conda` environment with `python=3.8.10`:
 
         conda create -n alexa_env python=3.8.10
         conda activate alexa_env
@@ -49,7 +57,9 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
 
 - Edit the `Alexa Init` Node properties to add your Alexa Account:
 
-    Account &rarr; Add new Alexa Account &rarr; Edit (Pencil Icon):
+  - Account &rarr; Add new Alexa Account &rarr; Edit (Pencil Icon):
+
+  - Global Config:
 
         Name: <Custom_Name>
         Auth Method: Proxy
@@ -57,9 +67,17 @@ Package that allows communication between ROS2 and Alexa, implementing two diffe
         Port : 3456
         File Path : /home/<user>/AuthFile
 
+  - For Italian language:
+
         Service Host: alexa.amazon.it
         Page:amazon.it
         Language: it-IT
+
+  - For English language:
+
+        Service Host: alexa.amazon.com
+        Page:amazon.com
+        Language: en-US
 
 - Click on the `Add` button and follow the instructions to add your account (you will be redirected to the Amazon Alexa login page)
 
