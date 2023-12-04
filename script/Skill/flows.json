@@ -8,41 +8,26 @@
         "env": []
     },
     {
-        "id": "fd15730b9473127d",
-        "type": "ros-subscribe",
-        "z": "792ca98ac735cc70",
-        "server": "d5573a5bee7c42db",
-        "topicname": "/alexa/tts",
-        "x": 320,
-        "y": 220,
-        "wires": [
-            [
-                "f245310ef412b666",
-                "f15f5a41304b46bb"
-            ]
-        ]
-    },
-    {
         "id": "f245310ef412b666",
         "type": "alexa-remote-routine",
         "z": "792ca98ac735cc70",
         "name": "",
-        "account": "ac7b59c675058ce4",
+        "account": "9143800af291332b",
         "routineNode": {
             "type": "speak",
             "payload": {
                 "type": "regular",
                 "text": {
                     "type": "msg",
-                    "value": "payload.data"
+                    "value": "data"
                 },
                 "devices": [
                     "G090XG0900860BED"
                 ]
             }
         },
-        "x": 900,
-        "y": 220,
+        "x": 660,
+        "y": 280,
         "wires": [
             [
                 "1296715c43d6ba78"
@@ -65,8 +50,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1100,
-        "y": 220,
+        "x": 860,
+        "y": 280,
         "wires": []
     },
     {
@@ -74,10 +59,10 @@
         "type": "alexa-remote-init",
         "z": "792ca98ac735cc70",
         "name": "",
-        "account": "ac7b59c675058ce4",
+        "account": "9143800af291332b",
         "option": "initialise",
-        "x": 320,
-        "y": 100,
+        "x": 260,
+        "y": 160,
         "wires": [
             []
         ]
@@ -95,8 +80,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 620,
-        "y": 160,
+        "x": 640,
+        "y": 200,
         "wires": []
     },
     {
@@ -104,7 +89,7 @@
         "type": "alexa-remote-routine",
         "z": "792ca98ac735cc70",
         "name": "provide screw",
-        "account": "ac7b59c675058ce4",
+        "account": "9143800af291332b",
         "routineNode": {
             "type": "textCommand",
             "payload": {
@@ -117,7 +102,7 @@
                 ]
             }
         },
-        "x": 880,
+        "x": 1020,
         "y": 400,
         "wires": [
             [
@@ -137,31 +122,16 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1080,
+        "x": 1220,
         "y": 400,
         "wires": []
-    },
-    {
-        "id": "580be87ce5789fa4",
-        "type": "ros-subscribe",
-        "z": "792ca98ac735cc70",
-        "server": "d5573a5bee7c42db",
-        "topicname": "/alexa/events",
-        "x": 330,
-        "y": 400,
-        "wires": [
-            [
-                "72e767344478b42e",
-                "aaf54d167cd72255"
-            ]
-        ]
     },
     {
         "id": "72e767344478b42e",
         "type": "switch",
         "z": "792ca98ac735cc70",
         "name": "event manager",
-        "property": "payload.data",
+        "property": "data",
         "propertyType": "msg",
         "rules": [
             {
@@ -173,7 +143,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 520,
+        "x": 660,
         "y": 400,
         "wires": [
             [
@@ -190,10 +160,11 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "data",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
+        "x": 640,
         "y": 480,
         "wires": []
     },
@@ -214,7 +185,7 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 700,
+        "x": 840,
         "y": 400,
         "wires": [
             [
@@ -223,32 +194,17 @@
         ]
     },
     {
-        "id": "7c33f956c09fbc07",
-        "type": "ros-subscribe",
-        "z": "792ca98ac735cc70",
-        "server": "d5573a5bee7c42db",
-        "topicname": "/alexa/test_voice_command",
-        "x": 380,
-        "y": 580,
-        "wires": [
-            [
-                "f71160276700c7bb",
-                "6d5a1062483d9e4f"
-            ]
-        ]
-    },
-    {
         "id": "b0962f318d3d974f",
         "type": "alexa-remote-routine",
         "z": "792ca98ac735cc70",
         "name": "",
-        "account": "ac7b59c675058ce4",
+        "account": "9143800af291332b",
         "routineNode": {
             "type": "textCommand",
             "payload": {
                 "text": {
                     "type": "msg",
-                    "value": "payload.data"
+                    "value": "data"
                 },
                 "devices": [
                     "G090XG0900860BED"
@@ -326,25 +282,120 @@
         ]
     },
     {
-        "id": "d5573a5bee7c42db",
-        "type": "ros-server",
-        "url": "ws://localhost:9091/"
+        "id": "170c98a1fa74bf08",
+        "type": "ROS2 Type",
+        "z": "792ca98ac735cc70",
+        "ros2pkg": "std_msgs",
+        "ros2message": "String",
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "319d0a574a153ef1"
+            ]
+        ]
     },
     {
-        "id": "ac7b59c675058ce4",
+        "id": "319d0a574a153ef1",
+        "type": "Subscriber",
+        "z": "792ca98ac735cc70",
+        "topic": "alexa/tts",
+        "domain": "bbcb77f90791ab85",
+        "props": [],
+        "selectedtype": "std_msgs/String",
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "f245310ef412b666",
+                "f15f5a41304b46bb"
+            ]
+        ]
+    },
+    {
+        "id": "dd2ec83d60fc0e30",
+        "type": "ROS2 Type",
+        "z": "792ca98ac735cc70",
+        "ros2pkg": "std_msgs",
+        "ros2message": "String",
+        "x": 160,
+        "y": 400,
+        "wires": [
+            [
+                "eb7fa4732182ab54"
+            ]
+        ]
+    },
+    {
+        "id": "eb7fa4732182ab54",
+        "type": "Subscriber",
+        "z": "792ca98ac735cc70",
+        "topic": "alexa/events",
+        "domain": "bbcb77f90791ab85",
+        "props": [],
+        "selectedtype": "std_msgs/String",
+        "x": 390,
+        "y": 400,
+        "wires": [
+            [
+                "72e767344478b42e",
+                "aaf54d167cd72255"
+            ]
+        ]
+    },
+    {
+        "id": "9d6c166fd095b6e4",
+        "type": "ROS2 Type",
+        "z": "792ca98ac735cc70",
+        "ros2pkg": "std_msgs",
+        "ros2message": "String",
+        "x": 140,
+        "y": 580,
+        "wires": [
+            [
+                "fe751e6c6198ed66"
+            ]
+        ]
+    },
+    {
+        "id": "fe751e6c6198ed66",
+        "type": "Subscriber",
+        "z": "792ca98ac735cc70",
+        "topic": "alexa/test_voice_command",
+        "domain": "bbcb77f90791ab85",
+        "props": [],
+        "selectedtype": "std_msgs/String",
+        "x": 390,
+        "y": 580,
+        "wires": [
+            [
+                "6d5a1062483d9e4f",
+                "f71160276700c7bb"
+            ]
+        ]
+    },
+    {
+        "id": "9143800af291332b",
         "type": "alexa-remote-account",
         "name": "Alexa-Davide",
         "authMethod": "proxy",
-        "proxyOwnIp": "192.168.1.8",
+        "proxyOwnIp": "localhost",
         "proxyPort": "3456",
-        "cookieFile": "AuthFile",
-        "refreshInterval": "5",
+        "cookieFile": "/home/davide/AuthFile",
+        "refreshInterval": "3",
         "alexaServiceHost": "alexa.amazon.it",
+        "pushDispatchHost": "",
         "amazonPage": "amazon.it",
         "acceptLanguage": "it-IT",
         "onKeywordInLanguage": "on",
         "userAgent": "",
-        "useWsMqtt": "on",
-        "autoInit": "on"
+        "usePushConnection": "on",
+        "autoInit": "on",
+        "autoQueryActivityOnTrigger": "off"
+    },
+    {
+        "id": "bbcb77f90791ab85",
+        "type": "dds-settings",
+        "domain": "10"
     }
 ]
