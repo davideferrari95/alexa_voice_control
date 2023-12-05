@@ -45,8 +45,8 @@ ament_python_install_package(${PROJECT_NAME})
 
 # Install Python Scripts
 install(PROGRAMS
-  script/Skill/backend.py
-  script/TTS/node_red.py
+  scripts/Skill/backend.py
+  scripts/TTS/node_red.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
