@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import rclpy, time
+import rclpy, time, sys
 from rclpy.node import Node
 from typing import List
 
@@ -8,6 +8,10 @@ from typing import List
 from std_msgs.msg import String
 from geometry_msgs.msg import Pose
 from alexa_voice_control.msg import VoiceCommand
+
+# Import Parent Folders
+from pathlib import Path
+sys.path.append(f'{str(Path(__file__).resolve().parents[1])}/scripts/utils')
 
 # Move Robot Utilities
 from move_robot import UR10e_RTDE_Move, GRIPPER_OPEN, GRIPPER_CLOSE
@@ -200,6 +204,7 @@ class ExperimentManager(Node):
 
 if __name__ == '__main__':
 
+    # Initialize ROS
     rclpy.init()
 
     # Initialize Experiment Manager Node
